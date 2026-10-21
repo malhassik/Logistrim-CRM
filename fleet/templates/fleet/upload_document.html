@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Загрузить документ | Логистрим</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            padding: 50px;
+        }
+
+        .container {
+            background-color: #1e1e1e;
+            width: 50%;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        h1 {
+            color: #fff;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #aaa;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            background: #2d2d2d;
+            border: 1px solid #444;
+            color: white;
+            box-sizing: border-box;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 12px 20px;
+            background: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background: #007bff;
+        }
+
+        .back-btn {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Загрузка документа</h1>
+
+        <!-- ВАЖНО: enctype="multipart/form-data" обязательно для загрузки файлов! -->
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Название документа:</label>
+                {{ form.title }}
+            </div>
+
+            <div class="form-group">
+                <label>Выберите машину:</label>
+                {{ form.truck }}
+            </div>
+
+            <div class="form-group">
+                <label>Файл (PDF, JPG, PNG):</label>
+                {{ form.file }}
+            </div>
+
+            <button type="submit">Загрузить документ</button>
+        </form>
+
+        <a href="{% url 'truck_list' %}" class="back-btn">← Вернуться в автопарк</a>
+    </div>
+</body>
+
+</html>

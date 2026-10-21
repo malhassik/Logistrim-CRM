@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Журнал заправок | Логистрим</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            padding: 40px;
+        }
+
+        .container {
+            background-color: #1e1e1e;
+            width: 80%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #333;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            color: #ffffff;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            background-color: #2d2d2d;
+            color: #e74c3c;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+
+        tr:hover {
+            background-color: #252525;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            border: 1px solid #555;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #007bff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Журнал заправок</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Машина</th>
+                    <th>Литры</th>
+                    <th>Стоимость</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <!-- Фильтр date:"d.m.Y" делает из 2026-10-21 красивый вид 21.10.2026 -->
+                    <td>
+                        {{ record.date|date:"d.m.Y" }}
+                    </td>
+                    <td style="font-weight: bold; color: #fff;">
+                        {{ record.truck.brand }} ({{ record.truck.plate_number }})
+                    </td>
+                    <td>
+                        {{ record.liters }} л.
+                    </td>
+                    <td style="color: #e74c3c; font-weight: bold;">
+                        {{ record.price }} ₽
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align: center; color: #777; padding: 30px;">Заправок пока нет.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Кнопка возврата на главную -->
+        <a href="{% url 'truck_list' %}" class="back-btn">← Назад в автопарк</a>
+    </div>
+</body>
+
+</html>
