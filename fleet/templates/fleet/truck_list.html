@@ -267,12 +267,15 @@
         <!-- Кнопки управления -->
         <div class="actions-bar">
             {% if user.is_superuser or "Бухгалтеры" in user.groups.all.0.name %}
+            <a href="{% url 'add_truck' %}" class="btn" style="background-color: #007bff;">🚚 Добавить машину</a>
             <a href="{% url 'fuel_list' %}" class="btn btn-fuel">⛽ Журнал заправок</a>
             <a href="{% url 'upload_document' %}" class="btn btn-doc">📄 Загрузить документ</a>
             {% endif %}
 
             <a href="/admin/" class="btn btn-admin">Перейти в панель управления (Админка)</a>
         </div>
+
+
 
     </div>
 </body>

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Truck, Document, FuelRecord
-from .forms import DocumentForm, FuelRecordForm
+from .forms import DocumentForm, FuelRecordForm, TruckForm
 from django.db.models import Sum
 
 
@@ -58,6 +58,20 @@ def add_fuel_records(request):
         form = FuelRecordForm()
 
     return render(request, "fleet/fuel_form.html", {"form": form})
+
+
+@login_required
+@user_passes_test(is_accountant, login_url="/login/")
+def add_truck(request):
+    if request.method == "POST":
+        form = TruckForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("truck_list")
+    else:
+        form = TruckForm()
+
+    return render(request, "fleet/truck_form.html", {"form": form})
 
 
 @login_required
