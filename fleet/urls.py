@@ -12,4 +12,5 @@ urlpatterns = [
         name="login",
     ),
     path("logout/", auth_views.LogoutView.as_view(next_page="/login/"), name="logout"),
+    path("fuel/add/", views.add_fuel_records, name="add_fuel_record"),
 ]

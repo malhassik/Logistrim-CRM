@@ -1,3 +1,5 @@
+{% load humanize %}
+
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -6,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Автопарк Логистрим</title>
     <style>
-        /* Базовые настройки в темных тонах */
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             background-color: #121212;
@@ -26,15 +27,62 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
 
-        h1 {
-            color: #ffffff;
-            margin-top: 0;
-            margin-bottom: 20px;
+        /* Верхняя панель с заголовком и профилем */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             border-bottom: 2px solid #333;
-            padding-bottom: 10px;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
         }
 
-        /* Настройки таблицы */
+        .header h1 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 28px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #aaa;
+        }
+
+        /* Карточки статистики */
+        .stats-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            flex: 1;
+            min-width: 200px;
+            background: #252525;
+            padding: 20px;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        .stat-card h3 {
+            margin: 0;
+            color: #aaa;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card p {
+            margin: 10px 0 0 0;
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        /* Таблица */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -51,7 +99,6 @@
         th {
             background-color: #2d2d2d;
             color: #007bff;
-            /* Синий цвет для заголовков */
             font-weight: bold;
             text-transform: uppercase;
             font-size: 13px;
@@ -60,45 +107,59 @@
 
         tr:hover {
             background-color: #252525;
-            /* Подсветка строки при наведении */
             transition: 0.2s;
         }
 
-        /* Красивые статусы */
+        /* Статусы */
         .status-available {
             color: #2ecc71;
             font-weight: bold;
         }
 
-        /* Зеленый */
         .status-busy {
             color: #f1c40f;
             font-weight: bold;
         }
 
-        /* Желтый */
+        /* Кнопки */
+        .actions-bar {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 35px;
+            flex-wrap: wrap;
+        }
 
-        /* Кнопка админки */
-        .admin-btn {
-            display: block;
-            width: fit-content;
-            margin: 30px auto 0;
-            padding: 10px 20px;
-            background-color: #333;
+        .btn {
+            padding: 12px 25px;
             color: #fff;
             text-decoration: none;
             border-radius: 5px;
-            border: 1px solid #555;
-            transition: 0.3s;
             font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            transition: 0.3s;
+            display: inline-block;
         }
 
-        .admin-btn:hover {
-            background-color: #007bff;
-            border-color: #007bff;
+        .btn:hover {
+            opacity: 0.85;
         }
 
-        /* Стили для ссылок на документы */
+        .btn-doc {
+            background-color: #28a745;
+        }
+
+        .btn-fuel {
+            background-color: #e74c3c;
+        }
+
+        .btn-admin {
+            background-color: #333;
+            border: 1px solid #555;
+        }
+
         .doc-link {
             color: #007bff;
             text-decoration: none;
@@ -108,69 +169,55 @@
         }
 
         .doc-link:hover {
-            color: #4da3ff;
             text-decoration: underline;
+        }
+
+        /* Защита от переноса строк для переменных */
+        .nowrap {
+            white-space: nowrap;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div
-            style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px;">
-            <h1 style="margin: 0; border: none; padding: 0;">Наш автопарк</h1>
-            <div style="display: flex; align-items: center;">
-                <span style="color: #aaa; margin-right: 15px;">Привет, <b>{{ user.username }}</b>!</span>
 
-                <!-- Форма для выхода (POST-запрос) -->
+        <!-- Шапка сайта -->
+        <div class="header">
+            <h1>Наш автопарк</h1>
+            <div class="user-info">
+                <span>Привет, <b class="nowrap">{{ user.username }}</b>!</span>
                 <form action="{% url 'logout' %}" method="POST" style="margin: 0;">
                     {% csrf_token %}
                     <button type="submit"
-                        style="background: none; border: none; color: #ff4444; text-decoration: none; font-weight: bold; cursor: pointer; font-size: 16px; padding: 0;">
+                        style="background: none; border: none; color: #ff4444; font-weight: bold; cursor: pointer; font-size: 15px; padding: 0;">
                         Выйти
                     </button>
                 </form>
             </div>
-            <!-- Блок статистики (Карточки) -->
-            <div class="stats-container" style="display: flex; gap: 20px; margin-bottom: 30px;">
+        </div>
 
-                <div class="stat-card"
-                    style="flex: 1; background: #252525; padding: 20px; border-radius: 8px; border-left: 5px solid #007bff;">
-                    <h3 style="margin: 0; color: #aaa; font-size: 14px; text-transform: uppercase;">Всего машин</h3>
-                    <p style="margin: 10px 0 0 0; font-size: 28px; font-weight: bold; color: #fff;">
-                        {{ total_trucks }}
-                    </p>
-                </div>
-
-                <div class="stat-card"
-                    style="flex: 1; background: #252525; padding: 20px; border-radius: 8px; border-left: 5px solid #2ecc71;">
-                    <h3 style="margin: 0; color: #aaa; font-size: 14px; text-transform: uppercase;">Свободно сейчас</h3>
-                    <p style="margin: 10px 0 0 0; font-size: 28px; font-weight: bold; color: #fff;">
-                        {{ free_trucks }}
-                    </p>
-                </div>
-
-                <div class="stat-card"
-                    style="flex: 1; background: #252525; padding: 20px; border-radius: 8px; border-left: 5px solid #f1c40f;">
-                    <h3 style="margin: 0; color: #aaa; font-size: 14px; text-transform: uppercase;">Загружено документов
-                    </h3>
-                    <p style="margin: 10px 0 0 0; font-size: 28px; font-weight: bold; color: #fff;">
-                        {{ total_documents }}
-                    </p>
-                </div>
-                <!-- Новая карточка -->
-                <div class="stat-card"
-                    style="flex: 1; background: #252525; padding: 20px; border-radius: 8px; border-left: 5px solid #e74c3c;">
-                    <h3 style="margin: 0; color: #aaa; font-size: 14px; text-transform: uppercase;">Расходы на топливо
-                    </h3>
-                    <!-- Убедись, что переменная на одной строке, без переносов! -->
-                    <p style="margin: 10px 0 0 0; font-size: 28px; font-weight: bold; color: #fff;">
-                        {{ fuel_expenses }} ₽
-                    </p>
-                </div>
+        <!-- Карточки со статистикой -->
+        <div class="stats-container">
+            <div class="stat-card" style="border-left: 5px solid #007bff;">
+                <h3>Всего машин</h3>
+                <p class="nowrap">{{ total_trucks }}</p>
+            </div>
+            <div class="stat-card" style="border-left: 5px solid #2ecc71;">
+                <h3>Свободно сейчас</h3>
+                <p class="nowrap">{{ free_trucks }}</p>
+            </div>
+            <div class="stat-card" style="border-left: 5px solid #f1c40f;">
+                <h3>Загружено документов</h3>
+                <p class="nowrap">{{ total_documents }}</p>
+            </div>
+            <div class="stat-card" style="border-left: 5px solid #e74c3c;">
+                <h3>Расходы на топливо</h3>
+                <p class="nowrap">{{ fuel_expenses|floatformat:2|intcomma }} ₽</p>
             </div>
         </div>
 
+        <!-- Таблица машин -->
         <table>
             <thead>
                 <tr>
@@ -178,28 +225,26 @@
                     <th>Марка</th>
                     <th>Пробег</th>
                     <th>Статус</th>
-                    <th>Документы</th> <!-- Новая колонка -->
+                    <th>Документы</th>
                 </tr>
             </thead>
             <tbody>
                 {% for truck in trucks %}
                 <tr>
-                    <td style="font-weight: bold; color: #fff;">{{ truck.plate_number }}</td>
+                    <td style="font-weight: bold; color: #fff;" class="nowrap">{{ truck.plate_number }}</td>
                     <td>{{ truck.brand }}</td>
-                    <td>{{ truck.mileage }} км</td>
+                    <td class="nowrap">{{ truck.mileage|intcomma }} км</td>
                     <td>
-                        <!-- Если машина занята - желтый цвет, если свободна - зеленый -->
-                        <span class="{% if truck.driver %}status-busy{% else %}status-available{% endif %}">
+                        <span class="{% if truck.driver %}status-busy{% else %}status-available{% endif %} nowrap">
                             {{ truck.status }}
                         </span>
-
-                        <!-- Если есть водитель - выводим его имя в скобках -->
                         {% if truck.driver %}
-                        <span style="color: #777; font-size: 14px;">(Водитель: {{ truck.driver.name }})</span>
+                        <span style="color: #777; font-size: 14px;" class="nowrap">
+                            (Водитель: {{ truck.driver.name }})
+                        </span>
                         {% endif %}
                     </td>
                     <td>
-                        <!-- truck.document_set.all выводит все документы, привязанные к этой машине -->
                         {% for doc in truck.document_set.all %}
                         <a href="{{ doc.file.url }}" target="_blank" class="doc-link">
                             📄 {{ doc.title }}
@@ -211,7 +256,6 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <!-- Обрати внимание: colspan теперь равен 5, так как колонок стало 5 -->
                     <td colspan="5" style="text-align: center; color: #777; padding: 30px;">
                         В автопарке пока нет машин.
                     </td>
@@ -219,18 +263,17 @@
                 {% endfor %}
             </tbody>
         </table>
-        <div style="display: flex; justify-content: center; gap: 20px; margin-top: 30px;">
 
-            <a href="{% url 'fuel_list' %}" class="admin-btn"
-                style="background-color: #e74c3c; border-color: #e74c3c;">⛽ Журнал заправок</a>
-
+        <!-- Кнопки управления -->
+        <div class="actions-bar">
             {% if user.is_superuser or "Бухгалтеры" in user.groups.all.0.name %}
-            <a href="{% url 'upload_document' %}" class="admin-btn"
-                style="background-color: #28a745; border-color: #28a745;">📄 Загрузить документ</a>
+            <a href="{% url 'fuel_list' %}" class="btn btn-fuel">⛽ Журнал заправок</a>
+            <a href="{% url 'upload_document' %}" class="btn btn-doc">📄 Загрузить документ</a>
             {% endif %}
 
-            <a href="/admin/" class="admin-btn">Перейти в панель управления (Админка)</a>
+            <a href="/admin/" class="btn btn-admin">Перейти в панель управления (Админка)</a>
         </div>
+
     </div>
 </body>
 
