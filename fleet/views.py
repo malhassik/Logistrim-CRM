@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Truck, Document, FuelRecord
-from .forms import DocumentForm, FuelRecordForm, TruckForm
+from .forms import DocumentForm, FuelRecordForm, TruckForm, DriverForm
 from django.db.models import Sum
 
 
@@ -72,6 +72,39 @@ def add_truck(request):
         form = TruckForm()
 
     return render(request, "fleet/truck_form.html", {"form": form})
+
+
+@login_required
+@user_passes_test(is_accountant, login_url="/login/")
+def add_driver(request):
+    if request.method == "POST":
+        form = DriverForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("truck_list")
+    else:
+        form = DriverForm()
+
+    return render(request, "fleet/driver_form.html", {"form": form})
+
+
+@login_required
+@user_passes_test(is_accountant, login_url="/login/")
+def edit_truck(request, truck_id):
+    # 1. Находим машину в базе по её ID (если нет — выдаем ошибку 404)
+    truck = get_object_or_404(Truck, id=truck_id)
+
+    if request.method == "POST":
+        # 2. Передаем существующую машину в форму (instance=truck)
+        form = TruckForm(request.POST, instance=truck)
+        if form.is_valid():
+            form.save()  # Django обновит эту же запись, а не создаст новую
+            return redirect("truck_list")
+    else:
+        # 3. При GET-запросе показываем форму, уже заполненную данными машины
+        form = TruckForm(instance=truck)
+
+    return render(request, "fleet/truck_form.html", {"form": form, "truck": truck})
 
 
 @login_required

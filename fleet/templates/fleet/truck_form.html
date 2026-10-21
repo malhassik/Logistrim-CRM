@@ -75,7 +75,7 @@
 
 <body>
     <div class="container">
-        <h1>Добавить новую машину</h1>
+        <h1>{% if truck %}Редактировать машину{% else %}Добавить новую машину{% endif %}</h1>
 
         <form method="POST">
             {% csrf_token %}
@@ -95,7 +95,14 @@
                 {{ form.mileage }}
             </div>
 
-            <button type="submit">Сохранить машину</button>
+            <div class="form-group">
+                <label>Назначить водителя (необязательно):</label>
+                {{ form.driver }}
+            </div>
+
+            <button type="submit">
+                {% if truck %}Сохранить изменения{% else %}Создать машину{% endif %}
+            </button>
         </form>
 
         <a href="{% url 'truck_list' %}" class="back-btn">← Вернуться в автопарк</a>

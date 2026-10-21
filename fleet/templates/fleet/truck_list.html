@@ -226,6 +226,7 @@
                     <th>Пробег</th>
                     <th>Статус</th>
                     <th>Документы</th>
+                    <th>Действия</th>
                 </tr>
             </thead>
             <tbody>
@@ -253,10 +254,16 @@
                         <span style="color: #777; font-size: 14px;">Нет файлов</span>
                         {% endfor %}
                     </td>
+                    <td>
+                        {% if user.is_superuser or "Бухгалтеры" in user.groups.all.0.name %}
+                        <a href="{% url 'edit_truck' truck.id %}"
+                            style="color: #f1c40f; text-decoration: none; font-weight: bold;">✏️ Изменить</a>
+                        {% endif %}
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" style="text-align: center; color: #777; padding: 30px;">
+                    <td colspan="6" style="text-align: center; color: #777; padding: 30px;">
                         В автопарке пока нет машин.
                     </td>
                 </tr>
@@ -267,6 +274,7 @@
         <!-- Кнопки управления -->
         <div class="actions-bar">
             {% if user.is_superuser or "Бухгалтеры" in user.groups.all.0.name %}
+            <a href="{% url 'add_driver' %}" class="btn" style="background-color: #17a2b8;">👤 Добавить водителя</a>
             <a href="{% url 'add_truck' %}" class="btn" style="background-color: #007bff;">🚚 Добавить машину</a>
             <a href="{% url 'fuel_list' %}" class="btn btn-fuel">⛽ Журнал заправок</a>
             <a href="{% url 'upload_document' %}" class="btn btn-doc">📄 Загрузить документ</a>

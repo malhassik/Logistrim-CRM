@@ -45,7 +45,7 @@ class FuelRecordForm(forms.ModelForm):
 class TruckForm(forms.ModelForm):
     class Meta:
         model = Truck
-        fields = ["brand", "plate_number", "mileage"]
+        fields = ["brand", "plate_number", "mileage", "driver"]
         widgets = {
             "brand": forms.TextInput(
                 attrs={"class": "form-control", "placeholder": "Например: Volvo"}
@@ -55,5 +55,21 @@ class TruckForm(forms.ModelForm):
             ),
             "mileage": forms.NumberInput(
                 attrs={"class": "form-control", "placeholder": "0"}
+            ),
+            "driver": forms.Select(attrs={"class": "form-control"}),
+        }
+
+
+class DriverForm(forms.ModelForm):
+    class Meta:
+        model = Driver
+        fields = ["name", "phone"]
+
+        widgets = {
+            "name": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Например: Иван Иванов"}
+            ),
+            "phone": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "+7 999 123-45-67"}
             ),
         }
