@@ -27,5 +27,5 @@
 
 1. Склонируйте репозиторий:
    ```bash
-   git clone <ссылка_на_ваш_репозиторий>
+   git clone https://github.com/malhassik/Logistrim-CRM
    cd logistrim-crm
