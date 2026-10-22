@@ -176,6 +176,75 @@
         .nowrap {
             white-space: nowrap;
         }
+
+        /* =========================================
+           МОБИЛЬНАЯ ВЕРСИЯ (адаптив под телефоны)
+           Срабатывает только если экран меньше 768px
+           ========================================= */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+                /* Уменьшаем отступы по краям */
+            }
+
+            .container {
+                width: 100%;
+                padding: 15px;
+            }
+
+            /* Шапка: ставим элементы друг под другом */
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .user-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            /* Карточки статистики: по 2 штуки в ряд */
+            .stats-container {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .stat-card {
+                flex: 1 1 calc(50% - 10px);
+                /* Каждая карточка занимает 50% ширины */
+                min-width: 0;
+            }
+
+            .stat-card p {
+                font-size: 22px;
+                /* Чуть уменьшаем цифры */
+            }
+
+            /* Таблица: разрешаем горизонтальный скролл (свайп) */
+            .table-wrapper {
+                overflow-x: auto;
+                width: 100%;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            table {
+                min-width: 700px;
+                /* Заставляем таблицу не сжиматься меньше 700px */
+            }
+
+            /* Кнопки внизу: во всю ширину */
+            .actions-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+                box-sizing: border-box;
+            }
+        }
     </style>
 </head>
 
@@ -218,6 +287,7 @@
         </div>
 
         <!-- Таблица машин -->
+        <div class="table-wrapper"></div>
         <table>
             <thead>
                 <tr>
@@ -285,18 +355,18 @@
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+    <!-- Кнопки управления -->
+    <div class="actions-bar">
+        {% if user.is_superuser or "Бухгалтеры" in user.groups.all.0.name %}
+        <a href="{% url 'add_driver' %}" class="btn" style="background-color: #17a2b8;">👤 Добавить водителя</a>
+        <a href="{% url 'add_truck' %}" class="btn" style="background-color: #007bff;">🚚 Добавить машину</a>
+        <a href="{% url 'fuel_list' %}" class="btn btn-fuel">⛽ Журнал заправок</a>
 
-        <!-- Кнопки управления -->
-        <div class="actions-bar">
-            {% if user.is_superuser or "Бухгалтеры" in user.groups.all.0.name %}
-            <a href="{% url 'add_driver' %}" class="btn" style="background-color: #17a2b8;">👤 Добавить водителя</a>
-            <a href="{% url 'add_truck' %}" class="btn" style="background-color: #007bff;">🚚 Добавить машину</a>
-            <a href="{% url 'fuel_list' %}" class="btn btn-fuel">⛽ Журнал заправок</a>
+        {% endif %}
 
-            {% endif %}
-
-            <a href="/admin/" class="btn btn-admin">Перейти в панель управления (Админка)</a>
-        </div>
+        <a href="/admin/" class="btn btn-admin">Перейти в панель управления (Админка)</a>
+    </div>
 
 
 
