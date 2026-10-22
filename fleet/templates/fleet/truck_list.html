@@ -1,5 +1,4 @@
 {% load humanize %}
-
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -27,7 +26,7 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
 
-        /* Верхняя панель с заголовком и профилем */
+        /* Верхняя панель */
         .header {
             display: flex;
             justify-content: space-between;
@@ -83,6 +82,12 @@
         }
 
         /* Таблица */
+        .table-wrapper {
+            overflow-x: auto;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -94,6 +99,8 @@
             padding: 15px;
             text-align: left;
             border-bottom: 1px solid #333;
+            vertical-align: middle;
+            /* Выравниваем по центру по вертикали */
         }
 
         th {
@@ -141,6 +148,7 @@
             font-size: 15px;
             transition: 0.3s;
             display: inline-block;
+            text-align: center;
         }
 
         .btn:hover {
@@ -160,43 +168,53 @@
             border: 1px solid #555;
         }
 
+        .btn-add {
+            background-color: #007bff;
+        }
+
+        .btn-driver {
+            background-color: #17a2b8;
+        }
+
         .doc-link {
             color: #007bff;
             text-decoration: none;
             display: block;
             margin-bottom: 5px;
             transition: 0.2s;
+            font-size: 14px;
         }
 
         .doc-link:hover {
             text-decoration: underline;
         }
 
-        /* Защита от переноса строк для переменных */
         .nowrap {
             white-space: nowrap;
         }
 
         /* =========================================
-           МОБИЛЬНАЯ ВЕРСИЯ (адаптив под телефоны)
-           Срабатывает только если экран меньше 768px
+           МОБИЛЬНАЯ ВЕРСИЯ
            ========================================= */
         @media (max-width: 768px) {
             body {
-                padding: 15px;
-                /* Уменьшаем отступы по краям */
+                padding: 10px;
             }
 
             .container {
                 width: 100%;
                 padding: 15px;
+                box-sizing: border-box;
             }
 
-            /* Шапка: ставим элементы друг под другом */
             .header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 10px;
+                gap: 15px;
+            }
+
+            .header h1 {
+                font-size: 24px;
             }
 
             .user-info {
@@ -204,36 +222,35 @@
                 justify-content: space-between;
             }
 
-            /* Карточки статистики: по 2 штуки в ряд */
             .stats-container {
-                flex-wrap: wrap;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
                 gap: 10px;
             }
 
             .stat-card {
-                flex: 1 1 calc(50% - 10px);
-                /* Каждая карточка занимает 50% ширины */
                 min-width: 0;
+                padding: 15px;
             }
 
             .stat-card p {
-                font-size: 22px;
-                /* Чуть уменьшаем цифры */
+                font-size: 20px;
             }
 
-            /* Таблица: разрешаем горизонтальный скролл (свайп) */
-            .table-wrapper {
-                overflow-x: auto;
-                width: 100%;
-                -webkit-overflow-scrolling: touch;
-            }
-
+            /* Таблица: делаем широкой и запрещаем перенос строк */
             table {
-                min-width: 700px;
-                /* Заставляем таблицу не сжиматься меньше 700px */
+                min-width: 1000px;
             }
 
-            /* Кнопки внизу: во всю ширину */
+            /* Увеличили ширину, чтобы все влезло в одну строку */
+            th,
+            td {
+                white-space: nowrap;
+                /* Текст не будет переноситься */
+                font-size: 14px;
+                padding: 10px;
+            }
+
             .actions-bar {
                 flex-direction: column;
                 gap: 10px;
@@ -241,7 +258,6 @@
 
             .btn {
                 width: 100%;
-                text-align: center;
                 box-sizing: border-box;
             }
         }
@@ -251,7 +267,6 @@
 <body>
     <div class="container">
 
-        <!-- Шапка сайта -->
         <div class="header">
             <h1>Наш автопарк</h1>
             <div class="user-info">
@@ -266,7 +281,6 @@
             </div>
         </div>
 
-        <!-- Карточки со статистикой -->
         <div class="stats-container">
             <div class="stat-card" style="border-left: 5px solid #007bff;">
                 <h3>Всего машин</h3>
@@ -286,89 +300,80 @@
             </div>
         </div>
 
-        <!-- Таблица машин -->
-        <div class="table-wrapper"></div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Госномер</th>
-                    <th>Марка</th>
-                    <th>Пробег</th>
-                    <th>Статус</th>
-                    <th>Документы</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for truck in trucks %}
-                <tr>
-                    <td style="font-weight: bold; color: #fff;" class="nowrap">{{ truck.plate_number }}</td>
-                    <td>{{ truck.brand }}</td>
-                    <td class="nowrap">{{ truck.mileage|intcomma }} км</td>
-                    <td>
-                        <span class="{% if truck.driver %}status-busy{% else %}status-available{% endif %} nowrap">
-                            {{ truck.status }}
-                        </span>
-                        {% if truck.driver %}
-                        <span style="color: #777; font-size: 14px;" class="nowrap">
-                            (Водитель: {{ truck.driver.name }})
-                        </span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <!-- Блок для документов с ограничением высоты и скроллом -->
-                        <div
-                            style="max-height: 80px; overflow-y: auto; margin-bottom: 10px; display: flex; flex-direction: column;">
-                            {% for doc in truck.document_set.all %}
-                            <a href="{{ doc.file.url }}" target="_blank" class="doc-link"
-                                style="font-size: 14px; margin-bottom: 4px;">
-                                📄 {{ doc.title }}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Госномер</th>
+                        <th>Марка</th>
+                        <th>Пробег</th>
+                        <th>Статус</th>
+                        <th>Документы</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for truck in trucks %}
+                    <tr>
+                        <td style="font-weight: bold; color: #fff;">{{ truck.plate_number }}</td>
+                        <td>{{ truck.brand }}</td>
+                        <td>{{ truck.mileage|intcomma }} км</td>
+
+                        <!-- ИСПРАВЛЕННЫЙ СТАТУС (без <br>) -->
+                        <td>
+                            <span class="{% if truck.driver %}status-busy{% else %}status-available{% endif %}">
+                                {{ truck.status }}
+                            </span>
+                            {% if truck.driver %}
+                            <span style="color: #777; font-size: 13px;">(Водитель: {{ truck.driver.name }})</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <div
+                                style="max-height: 80px; overflow-y: auto; margin-bottom: 10px; display: flex; flex-direction: column;">
+                                {% for doc in truck.document_set.all %}
+                                <a href="{{ doc.file.url }}" target="_blank" class="doc-link">
+                                    📄 {{ doc.title }}
+                                </a>
+                                {% empty %}
+                                <span style="color: #777; font-size: 14px;">Нет файлов</span>
+                                {% endfor %}
+                            </div>
+
+                            <a href="{% url 'upload_document_for_truck' truck.id %}"
+                                style="display: inline-block; background-color: #28a745; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; text-decoration: none; font-weight: bold;">
+                                + Загрузить файл
                             </a>
-                            {% empty %}
-                            <span style="color: #777; font-size: 14px;">Нет файлов</span>
-                            {% endfor %}
-                        </div>
+                        </td>
 
-                        <!-- Кнопка загрузки, всегда снизу -->
-                        <a href="{% url 'upload_document_for_truck' truck.id %}"
-                            style="display: inline-block; background-color: #007bff; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; text-decoration: none; font-weight: bold; transition: 0.3s;"
-                            onmouseover="this.style.backgroundColor='#0056b3'"
-                            onmouseout="this.style.backgroundColor='#007bff'">
-                            + Загрузить файл
-                        </a>
-                    </td>
-                    <td>
+                        <td>
+                            {% if user.is_superuser or "Бухгалтеры" in user.groups.all.0.name %}
+                            <a href="{% url 'edit_truck' truck.id %}"
+                                style="color: #f1c40f; text-decoration: none; font-weight: bold;">✏️ Изменить</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #777; padding: 30px;">
+                            В автопарке пока нет машин.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-                        {% if user.is_superuser or "Бухгалтеры" in user.groups.all.0.name %}
-                        <a href="{% url 'edit_truck' truck.id %}"
-                            style="color: #f1c40f; text-decoration: none; font-weight: bold;">✏️ Изменить</a>
-                        {% endif %}
+        <div class="actions-bar">
+            {% if user.is_superuser or "Бухгалтеры" in user.groups.all.0.name %}
+            <a href="{% url 'add_driver' %}" class="btn btn-driver">👤 Добавить водителя</a>
+            <a href="{% url 'add_truck' %}" class="btn btn-add">🚚 Добавить машину</a>
+            <a href="{% url 'fuel_list' %}" class="btn btn-fuel">⛽ Журнал заправок</a>
+            {% endif %}
 
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6" style="text-align: center; color: #777; padding: 30px;">
-                        В автопарке пока нет машин.
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <!-- Кнопки управления -->
-    <div class="actions-bar">
-        {% if user.is_superuser or "Бухгалтеры" in user.groups.all.0.name %}
-        <a href="{% url 'add_driver' %}" class="btn" style="background-color: #17a2b8;">👤 Добавить водителя</a>
-        <a href="{% url 'add_truck' %}" class="btn" style="background-color: #007bff;">🚚 Добавить машину</a>
-        <a href="{% url 'fuel_list' %}" class="btn btn-fuel">⛽ Журнал заправок</a>
-
-        {% endif %}
-
-        <a href="/admin/" class="btn btn-admin">Перейти в панель управления (Админка)</a>
-    </div>
-
-
+            <a href="/admin/" class="btn btn-admin">Перейти в панель управления (Админка)</a>
+        </div>
 
     </div>
 </body>
