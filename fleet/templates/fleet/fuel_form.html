@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Добавить заправку | Логистрим</title>
     <style>
         body {
@@ -69,6 +70,28 @@
             margin-top: 20px;
             color: #007bff;
             text-decoration: none;
+        }
+
+        /* Адаптив для форм на мобильных */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+                /* Уменьшаем отступы по краям */
+            }
+
+            .container,
+            .card {
+                width: 100% !important;
+                /* Растягиваем форму на весь экран */
+                padding: 20px;
+                box-sizing: border-box;
+            }
+
+            h1,
+            h2 {
+                font-size: 24px;
+                /* Чуть уменьшаем заголовки */
+            }
         }
     </style>
 </head>
