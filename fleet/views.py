@@ -122,6 +122,14 @@ def upload_document(request, truck_id):
 
 @login_required
 @user_passes_test(is_accountant, login_url="/login/")
+def delete_truck(request, truck_id):
+    truck = get_object_or_404(Truck, id=truck_id)
+    truck.delete()
+    return redirect("truck_list")
+
+
+@login_required
+@user_passes_test(is_accountant, login_url="/login/")
 def fuel_list(request):
     records = FuelRecord.objects.all().order_by("-id")
 

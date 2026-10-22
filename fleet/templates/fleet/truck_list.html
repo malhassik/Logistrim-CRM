@@ -350,7 +350,14 @@
                         <td>
                             {% if user.is_superuser or "Бухгалтеры" in user.groups.all.0.name %}
                             <a href="{% url 'edit_truck' truck.id %}"
-                                style="color: #f1c40f; text-decoration: none; font-weight: bold;">✏️ Изменить</a>
+                                style="color: #f1c40f; text-decoration: none; font-weight: bold;" class="nowrap">✏️
+                                Изменить</a>
+                            <br>
+                            <!-- ВОТ КНОПКА УДАЛЕНИЯ С ПОДТВЕРЖДЕНИЕМ -->
+                            <a href="{% url 'delete_truck' truck.id %}"
+                                onclick="return confirm('Вы уверены, что хотите удалить машину {{ truck.brand }} ({{ truck.plate_number }})? Все её документы тоже удалятся!');"
+                                style="color: #ff4444; text-decoration: none; font-weight: bold; font-size: 14px;"
+                                class="nowrap">🗑️ Удалить</a>
                             {% endif %}
                         </td>
                     </tr>

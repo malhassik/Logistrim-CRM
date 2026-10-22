@@ -20,4 +20,5 @@ urlpatterns = [
     path("truck/add/", views.add_truck, name="add_truck"),
     path("driver/add/", views.add_driver, name="add_driver"),
     path("truck/<int:truck_id>/edit/", views.edit_truck, name="edit_truck"),
+    path("truck/<int:truck_id>/delete", views.delete_truck, name="delete_truck"),
 ]
