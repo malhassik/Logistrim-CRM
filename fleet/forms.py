@@ -5,7 +5,7 @@ from .models import Document, FuelRecord, Truck, Driver
 class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
-        fields = ["title", "truck", "file"]
+        fields = ["title"]  # Оставляем только название, файлы обработаем во view
         widgets = {
             "title": forms.TextInput(
                 attrs={
@@ -13,8 +13,6 @@ class DocumentForm(forms.ModelForm):
                     "placeholder": "Например: ТН на перевозку",
                 }
             ),
-            "truck": forms.Select(attrs={"class": "form-control"}),
-            "file": forms.FileInput(attrs={"class": "form-control"}),
         }
 
 

@@ -4,7 +4,11 @@ from . import views
 
 urlpatterns = [
     path("", views.truck_list, name="truck_list"),
-    path("upload/", views.upload_document, name="upload_document"),
+    path(
+        "upload/<int:truck_id>/",
+        views.upload_document,
+        name="upload_document_for_truck",
+    ),
     path("fuel/", views.fuel_list, name="fuel_list"),
     path(
         "login/",

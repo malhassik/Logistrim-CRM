@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Truck, Document, FuelRecord
 from .forms import DocumentForm, FuelRecordForm, TruckForm, DriverForm
 from django.db.models import Sum
+from django import forms
 
 
 def is_accountant(user):
@@ -34,20 +35,6 @@ def truck_list(request):
 
 @login_required
 @user_passes_test(is_accountant, login_url="/login/")
-def upload_document(request):
-    if request.method == "POST":
-        form = DocumentForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect("truck_list")
-    else:
-        form = DocumentForm()
-
-    return render(request, "fleet/upload_document.html", {"form": form})
-
-
-@login_required
-@user_passes_test(is_accountant, login_url="/login/")
 def add_fuel_records(request):
     if request.method == "POST":
         form = FuelRecordForm(request.POST)
@@ -62,20 +49,6 @@ def add_fuel_records(request):
 
 @login_required
 @user_passes_test(is_accountant, login_url="/login/")
-def add_truck(request):
-    if request.method == "POST":
-        form = TruckForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("truck_list")
-    else:
-        form = TruckForm()
-
-    return render(request, "fleet/truck_form.html", {"form": form})
-
-
-@login_required
-@user_passes_test(is_accountant, login_url="/login/")
 def add_driver(request):
     if request.method == "POST":
         form = DriverForm(request.POST)
@@ -86,6 +59,20 @@ def add_driver(request):
         form = DriverForm()
 
     return render(request, "fleet/driver_form.html", {"form": form})
+
+
+@login_required
+@user_passes_test(is_accountant, login_url="/login/")
+def add_truck(request):
+    if request.method == "POST":
+        form = TruckForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("truck_list")
+    else:
+        form = TruckForm()
+
+    return render(request, "fleet/truck_form.html", {"form": form})
 
 
 @login_required
@@ -105,6 +92,32 @@ def edit_truck(request, truck_id):
         form = TruckForm(instance=truck)
 
     return render(request, "fleet/truck_form.html", {"form": form, "truck": truck})
+
+
+@login_required
+@user_passes_test(is_accountant, login_url="/login/")
+def upload_document(request, truck_id):
+    truck = get_object_or_404(Truck, id=truck_id)
+
+    if request.method == "POST":
+        form = DocumentForm(request.POST)
+        files = request.FILES.getlist("files")  # Получаем список файлов
+
+        # Проверяем: если файлы не выбраны, добавляем ошибку в форму
+        if not files:
+            form.add_error(None, "Выберите хотя бы один файл для загрузки.")
+
+        if form.is_valid():
+            title = form.cleaned_data["title"]
+            for f in files:
+                Document.objects.create(
+                    title=f"{title} ({f.name})", file=f, truck=truck
+                )
+            return redirect("truck_list")
+    else:
+        form = DocumentForm()
+
+    return render(request, "fleet/upload_document.html", {"form": form, "truck": truck})
 
 
 @login_required

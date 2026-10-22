@@ -246,19 +246,34 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% for doc in truck.document_set.all %}
-                        <a href="{{ doc.file.url }}" target="_blank" class="doc-link">
-                            📄 {{ doc.title }}
+                        <!-- Блок для документов с ограничением высоты и скроллом -->
+                        <div
+                            style="max-height: 80px; overflow-y: auto; margin-bottom: 10px; display: flex; flex-direction: column;">
+                            {% for doc in truck.document_set.all %}
+                            <a href="{{ doc.file.url }}" target="_blank" class="doc-link"
+                                style="font-size: 14px; margin-bottom: 4px;">
+                                📄 {{ doc.title }}
+                            </a>
+                            {% empty %}
+                            <span style="color: #777; font-size: 14px;">Нет файлов</span>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Кнопка загрузки, всегда снизу -->
+                        <a href="{% url 'upload_document_for_truck' truck.id %}"
+                            style="display: inline-block; background-color: #007bff; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; text-decoration: none; font-weight: bold; transition: 0.3s;"
+                            onmouseover="this.style.backgroundColor='#0056b3'"
+                            onmouseout="this.style.backgroundColor='#007bff'">
+                            + Загрузить файл
                         </a>
-                        {% empty %}
-                        <span style="color: #777; font-size: 14px;">Нет файлов</span>
-                        {% endfor %}
                     </td>
                     <td>
+
                         {% if user.is_superuser or "Бухгалтеры" in user.groups.all.0.name %}
                         <a href="{% url 'edit_truck' truck.id %}"
                             style="color: #f1c40f; text-decoration: none; font-weight: bold;">✏️ Изменить</a>
                         {% endif %}
+
                     </td>
                 </tr>
                 {% empty %}
@@ -277,7 +292,7 @@
             <a href="{% url 'add_driver' %}" class="btn" style="background-color: #17a2b8;">👤 Добавить водителя</a>
             <a href="{% url 'add_truck' %}" class="btn" style="background-color: #007bff;">🚚 Добавить машину</a>
             <a href="{% url 'fuel_list' %}" class="btn btn-fuel">⛽ Журнал заправок</a>
-            <a href="{% url 'upload_document' %}" class="btn btn-doc">📄 Загрузить документ</a>
+
             {% endif %}
 
             <a href="/admin/" class="btn btn-admin">Перейти в панель управления (Админка)</a>
