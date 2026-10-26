@@ -1,4 +1,6 @@
 {% load humanize %}
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -281,6 +283,11 @@
             </div>
         </div>
 
+        <div style="margin-bottom: 20px;">
+            <input type="text" id="search-input" placeholder="🔍 Поиск по номеру или марке..."
+                style="width: 100%; max-width: 400px; padding: 12px; background: #2d2d2d; border: 1px solid #444; color: white; border-radius: 5px; font-size: 15px;">
+        </div>
+
         <div class="stats-container">
             <div class="stat-card" style="border-left: 5px solid #007bff;">
                 <h3>Всего машин</h3>
@@ -383,6 +390,8 @@
         </div>
 
     </div>
+    <script src="{% static 'js/script.js' %}"> </script>
+
 </body>
 
 </html>
