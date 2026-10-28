@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=logistrim_db
+      - POSTGRES_USER=logistrim_user
+      - POSTGRES_PASSWORD=logistrim_password
+    # 👇 ДОБАВЛЯЕМ ПРОВЕРКУ ЗДОРОВЬЯ
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U logistrim_user -d logistrim_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  web:
+    build: .
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --no-input &&
+             gunicorn logistrim.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    # 👇 МЕНЯЕМ DEPENDS_ON, ЧТОБЫ ЖДАТЬ ГОТОВНОСТИ БД
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgres://logistrim_user:logistrim_password@db:5432/logistrim_db
+      - SECRET_KEY=django-insecure-docker-secret-key-12345
+      - DEBUG=True
+
+volumes:
+  postgres_data:

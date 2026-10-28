@@ -24,3 +24,4 @@ media/
 # Системный мусор (создается Windows/Mac автоматически)
 .DS_Store
 Thumbs.db
+staticfiles/
