@@ -4,6 +4,24 @@ from .models import Truck, Document, FuelRecord
 from .forms import DocumentForm, FuelRecordForm, TruckForm, DriverForm
 from django.db.models import Sum
 from django import forms
+from django.http import JsonResponse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import TruckSerializer
+from rest_framework import generics, permissions
+
+
+class TruckListAPIView(generics.ListCreateAPIView):
+    queryset = Truck.objects.all()
+    serializer_class = TruckSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class TruckDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Truck.objects.all()
+    serializer_class = TruckSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 def is_accountant(user):
@@ -40,7 +58,11 @@ def add_fuel_records(request):
         form = FuelRecordForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("fuel_list")
+            return JsonResponse(
+                {"status": "success", "message": "Заправка успешно добавлена!"}
+            )
+        else:
+            return JsonResponse({"status": "error", "errors": form.errors}, status=400)
     else:
         form = FuelRecordForm()
 

@@ -1,128 +1,73 @@
-<!DOCTYPE html>
-<html lang="ru">
+{% extends 'fleet/base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Добавить заправку | Логистрим</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #121212;
-            color: #e0e0e0;
-            padding: 50px;
-        }
+{% block title %}Добавить заправку | Логистрим{% endblock %}
 
-        .container {
-            background-color: #1e1e1e;
-            width: 50%;
-            margin: 0 auto;
-            padding: 30px;
-            border-radius: 10px;
-            border: 1px solid #333;
-        }
+{% block content %}
+<style>
+    /* Стили для этой конкретной страницы (чтобы форма была красивой) */
+    .form-container {
+        background: #1e1e1e;
+        width: 50%;
+        margin: 50px auto;
+        padding: 30px;
+        border-radius: 10px;
+        border: 1px solid #333;
+        color: white;
+        font-family: Arial;
+    }
 
-        h1 {
-            color: #fff;
-            border-bottom: 2px solid #333;
-            padding-bottom: 10px;
-        }
+    .form-group {
+        margin-bottom: 15px;
+    }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+    label {
+        display: block;
+        margin-bottom: 5px;
+        color: #aaa;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #aaa;
-        }
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        background: #2d2d2d;
+        border: 1px solid #444;
+        color: white;
+        border-radius: 5px;
+    }
 
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            background: #2d2d2d;
-            border: 1px solid #444;
-            color: white;
-            box-sizing: border-box;
-            border-radius: 5px;
-        }
+    button {
+        padding: 12px;
+        background: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        font-weight: bold;
+    }
+</style>
 
-        button {
-            padding: 12px 20px;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            font-weight: bold;
-            margin-top: 15px;
-        }
+<div class="form-container">
+    <h1>Новая заправка</h1>
 
-        button:hover {
-            background: #c0392b;
-        }
+    <div id="form-messages" style="margin-bottom: 15px; font-weight: bold;"></div>
 
-        .back-btn {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        /* Адаптив для форм на мобильных */
-        @media (max-width: 768px) {
-            body {
-                padding: 15px;
-                /* Уменьшаем отступы по краям */
-            }
-
-            .container,
-            .card {
-                width: 100% !important;
-                /* Растягиваем форму на весь экран */
-                padding: 20px;
-                box-sizing: border-box;
-            }
-
-            h1,
-            h2 {
-                font-size: 24px;
-                /* Чуть уменьшаем заголовки */
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <h1>Новая заправка</h1>
-
-        <form method="POST">
-            {% csrf_token %}
-
-            <div class="form-group">
-                <label>Машина:</label>
-                {{ form.truck }}
-            </div>
-
-            <div class="form-group">
-                <label>Количество литров:</label>
-                {{ form.liters }}
-            </div>
-
-            <div class="form-group">
-                <label>Стоимость (руб):</label>
-                {{ form.price }}
-            </div>
-
-            <button type="submit">Сохранить заправку</button>
-        </form>
-
-        <a href="{% url 'fuel_list' %}" class="back-btn">← Вернуться в журнал</a>
-    </div>
-</body>
-
-</html>
+    <!-- Обрати внимание: тут нет тегов head, body и скриптов! Они в base.html -->
+    <form id="fuel-form" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Машина:</label>
+            {{ form.truck }}
+        </div>
+        <div class="form-group">
+            <label>Литры:</label>
+            {{ form.liters }}
+        </div>
+        <div class="form-group">
+            <label>Стоимость (руб):</label>
+            {{ form.price }}
+        </div>
+        <button type="submit">Сохранить заправку</button>
+    </form>
+</div>
+{% endblock %}

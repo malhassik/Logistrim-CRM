@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Логистрим{% endblock %}</title>
+    <!-- Здесь ты можешь подключить общие CSS-стили, если вынесешь их в отдельный файл -->
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Вся уникальная часть страницы будет вставляться сюда -->
+    {% block content %}
+    {% endblock %}
+
+    <!-- JS подключается ОДИН РАЗ и работает на ВСЕХ страницах -->
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+</html>

@@ -10,6 +10,12 @@ urlpatterns = [
         name="upload_document_for_truck",
     ),
     path("fuel/", views.fuel_list, name="fuel_list"),
+    path("api/trucks/", views.TruckListAPIView.as_view(), name="api_truck_list"),
+    path(
+        "api/trucks/<int:pk>/",
+        views.TruckDetailAPIView.as_view(),
+        name="api_truck_detail",
+    ),
     path(
         "login/",
         auth_views.LoginView.as_view(template_name="fleet/login.html"),
@@ -21,4 +27,9 @@ urlpatterns = [
     path("driver/add/", views.add_driver, name="add_driver"),
     path("truck/<int:truck_id>/edit/", views.edit_truck, name="edit_truck"),
     path("truck/<int:truck_id>/delete", views.delete_truck, name="delete_truck"),
+    path(
+        "api/trucks/<int:pk>/",
+        views.TruckDetailAPIView.as_view(),
+        name="api_truck_detail",
+    ),
 ]
