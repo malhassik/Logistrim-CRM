@@ -24,7 +24,9 @@ class Truck(models.Model):
     )
 
     def __str__(self):
-        return f"{self.brand} | {self.plate_number}"
+        if self.driver is not None:
+            return f"{self.brand} — {self.plate_number} | Водитель: {self.driver.name}"
+        return f"{self.brand} — {self.plate_number} | Водитель: не назначен"
 
     def save(self, *args, **kwargs):
         if self.driver is not None:

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:15
@@ -8,7 +6,7 @@ services:
     environment:
       - POSTGRES_DB=logistrim_db
       - POSTGRES_USER=logistrim_user
-      - POSTGRES_PASSWORD=logistrim_password
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     # 👇 ДОБАВЛЯЕМ ПРОВЕРКУ ЗДОРОВЬЯ
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U logistrim_user -d logistrim_db" ]
@@ -32,9 +30,10 @@ services:
       db:
         condition: service_healthy
     environment:
-      - DATABASE_URL=postgres://logistrim_user:logistrim_password@db:5432/logistrim_db
-      - SECRET_KEY=django-insecure-docker-secret-key-12345
-      - DEBUG=True
+      - DATABASE_URL=${DATABASE_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG:-False}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-localhost,127.0.0.1}
 
 volumes:
   postgres_data:
