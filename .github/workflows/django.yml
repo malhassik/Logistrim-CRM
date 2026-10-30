@@ -1,0 +1,48 @@
+name: Django CI (Tests)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # Поднимаем базу данных PostgreSQL для тестов
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: logistrim_user
+          POSTGRES_PASSWORD: logistrim_password
+          POSTGRES_DB: logistrim_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.12"
+        
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run Tests
+      env:
+        DATABASE_URL: postgres://logistrim_user:logistrim_password@localhost:5432/logistrim_db
+        SECRET_KEY: django-insecure-github-actions-secret-key
+        DEBUG: True
+      run: |
+        pytest
