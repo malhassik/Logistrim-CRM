@@ -151,3 +151,9 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     )
 }
+
+# Настройки Celery
+CELERY_BROKER_URL = "redis://redis:6379/0"  # Адрес Redis внутри Docker-сети
+CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
