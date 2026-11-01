@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "fleet",
     "rest_framework",
+    "rest_framework_simplejwt",
 ]
 
 MIDDLEWARE = [
@@ -141,3 +142,12 @@ LOGIN_REDIRECT_URL = "/"
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"  # Куда собирать статику
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        # Оставляем сессии для браузера (чтобы админка работала)
+        "rest_framework.authentication.SessionAuthentication",
+        # Добавляем JWT для мобильных приложений
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
+}
