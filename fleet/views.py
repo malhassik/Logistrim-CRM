@@ -80,24 +80,6 @@ def truck_list(request):
 
 @login_required
 @user_passes_test(is_accountant, login_url="/login/")
-def add_fuel_records(request):
-    if request.method == "POST":
-        form = FuelRecordForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return JsonResponse(
-                {"status": "success", "message": "Заправка успешно добавлена!"}
-            )
-        else:
-            return JsonResponse({"status": "error", "errors": form.errors}, status=400)
-    else:
-        form = FuelRecordForm()
-
-    return render(request, "fleet/fuel_form.html", {"form": form})
-
-
-@login_required
-@user_passes_test(is_accountant, login_url="/login/")
 def add_driver(request):
     if request.method == "POST":
         form = DriverForm(request.POST)
@@ -167,6 +149,35 @@ def upload_document(request, truck_id):
         form = DocumentForm()
 
     return render(request, "fleet/upload_document.html", {"form": form, "truck": truck})
+
+
+@login_required
+@user_passes_test(is_accountant, login_url="/login/")
+def add_fuel_records(request, truck_id):
+    truck = get_object_or_404(Truck, id=truck_id)
+
+    if request.method == "POST":
+        form = FuelRecordForm(request.POST)
+
+        # ВАЖНО: говорим форме, что поле truck теперь необязательное,
+        # так как мы берем ID машины из URL
+        form.fields["truck"].required = False
+
+        if form.is_valid():
+            # save(commit=False) позволяет создать объект в памяти, но не сохранять в БД
+            record = form.save(commit=False)
+            # Принудительно привязываем машину из URL
+            record.truck = truck
+            # Теперь сохраняем в базу
+            record.save()
+
+            # Возвращаем на страницу этой машины
+            return redirect("truck_detail", truck_id=truck_id)
+    else:
+        form = FuelRecordForm()
+
+    # Передаем truck в контекст, чтобы в HTML сделать красивую кнопку "Назад"
+    return render(request, "fleet/fuel_form.html", {"form": form, "truck": truck})
 
 
 @login_required

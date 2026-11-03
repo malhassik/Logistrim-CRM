@@ -182,6 +182,22 @@
             font-style: italic;
         }
 
+        .btn-add-fuel {
+            background-color: #e74c3c;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+            white-space: nowrap;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .btn-add-fuel:hover {
+            background-color: #c0392b;
+        }
+
         /* Адаптив для телефонов */
         @media (max-width: 768px) {
             body {
@@ -202,6 +218,7 @@
             .details-grid {
                 grid-template-columns: 1fr;
             }
+
 
             /* Блоки в одну колонку */
         }
@@ -257,6 +274,8 @@
             <!-- Блок Заправок -->
             <div class="details-block">
                 <h2>⛽ История заправок</h2>
+                <a href="{% url 'add_fuel_record_for_truck' truck.id %}" class="btn-add-fuel">
+                    + Добавить заправку</a>
                 <ul>
                     {% for record in fuel_records %}
                     <li>
