@@ -45,6 +45,19 @@
         width: 100%;
         font-weight: bold;
     }
+
+    .back-btn {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .back-btn:hover {
+        text-decoration: underline;
+    }
 </style>
 
 <div class="form-container">
@@ -69,5 +82,6 @@
         </div>
         <button type="submit">Сохранить заправку</button>
     </form>
+    <a href="{% url 'dashboard' %}" class="back-btn">← Вернуться в автопарк</a>
 </div>
 {% endblock %}
