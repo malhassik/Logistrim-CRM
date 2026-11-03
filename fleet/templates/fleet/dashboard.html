@@ -7,17 +7,25 @@
     <title>Автопарк | Логистрим</title>
     <style>
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            /* Делаем тело страницы гибким контейнером */
+            display: flex;
+            flex-direction: column;
+            /* Растягиваем тело на 100% высоты экрана (vh - viewport height) */
+            min-height: 100vh;
+            /* Твой старый фон и цвет оставляем */
             background-color: #121212;
             color: #e0e0e0;
-            padding: 40px;
             margin: 0;
+            padding: 0;
         }
 
         .container {
+            /* Говорим контейнеру с карточками занять все свободное место */
+            flex: 1;
+            /* И сохраняем твои старые стили для центрирования */
             width: 90%;
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 40px auto;
         }
 
         /* Шапка сайта */
@@ -151,6 +159,21 @@
         </div>
 
     </div>
+
+    <footer
+        style="margin-top: 50px; padding: 20px 0; border-top: 1px solid #333; text-align: center; color: #777; font-size: 14px; font-family: 'Segoe UI', Arial, sans-serif;">
+        <div style="margin-bottom: 10px;">
+            <a href="{% url 'dashboard' %}" style="color: #007bff; text-decoration: none; margin: 0 10px;">Главная</a>
+            <a href="{% url 'fuel_list' %}" style="color: #007bff; text-decoration: none; margin: 0 10px;">Заправки</a>
+            <a href="/admin/" style="color: #007bff; text-decoration: none; margin: 0 10px;">Админка</a>
+        </div>
+
+        <p style="margin: 0;">
+            &copy; 2026 <b>Logistrim CRM</b>. Все права защищены. <br>
+            Вы вошли как: <span style="color: #aaa;">{{ user.username }}</span>
+        </p>
+    </footer>
+
 </body>
 
 </html>
