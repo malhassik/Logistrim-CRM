@@ -27,14 +27,14 @@ def is_accountant(user):
 
 
 @login_required
-def block_truck_list(request):
+def dashboard(request):
     trucks = Truck.objects.all()
 
     context = {
         "trucks": trucks,
     }
 
-    return render(request, "fleet/block_truck_list.html", context)
+    return render(request, "fleet/dashboard.html", context)
 
 
 @login_required
@@ -162,7 +162,7 @@ def upload_document(request, truck_id):
                 Document.objects.create(
                     title=f"{title} ({f.name})", file=f, truck=truck
                 )
-            return redirect("truck_list")
+            return redirect("truck_detail", truck_id=truck_id)
     else:
         form = DocumentForm()
 

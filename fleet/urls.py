@@ -7,7 +7,8 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
-    path("", views.block_truck_list, name="block_truck_list"),
+    path("", views.dashboard, name="dashboard"),
+    path("truck_list/", views.truck_list, name="truck_list"),
     path(
         "upload/<int:truck_id>/",
         views.upload_document,
@@ -36,9 +37,7 @@ urlpatterns = [
         views.TruckDetailAPIView.as_view(),
         name="api_truck_detail",
     ),
-    path(
-        "truck/<int:truck_id>/", views.truck_detail, name="truck_detail"
-    ),  # <--- НОВЫЙ ПУТЬ
+    path("truck/<int:truck_id>/", views.truck_detail, name="truck_detail"),
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]
