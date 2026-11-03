@@ -1,0 +1,17 @@
+<h1>Машина: {{ truck.brand }}</h1>
+
+<h2>Документы ({{ documents|length }} шт.):</h2>
+<ul>
+    {% for doc in documents %}
+    <li>{{ doc.title }}</li>
+    {% endfor %}
+</ul>
+
+<h2>Заправки ({{ fuel_records|length }} шт.):</h2>
+<ul>
+    {% for record in fuel_records %}
+    <li>{{ record.liters }} литров на сумму {{ record.price }} руб.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'block_truck_list' %}">Назад</a>

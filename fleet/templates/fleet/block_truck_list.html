@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Автопарк | Логистрим</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            padding: 40px;
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Шапка сайта */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #fff;
+        }
+
+        /* Сетка для карточек */
+        .trucks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* Карточка машины */
+        .truck-card {
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 25px;
+            text-decoration: none;
+            color: #e0e0e0;
+            transition: 0.3s;
+            display: block;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .truck-card:hover {
+            transform: translateY(-5px);
+            /* Эффект при наведении */
+            border-color: #007bff;
+            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.2);
+        }
+
+        .truck-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .truck-card h2 {
+            margin: 0 0 5px 0;
+            color: #fff;
+            font-size: 24px;
+        }
+
+        .truck-card .plate {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+            margin: 0 0 15px 0;
+        }
+
+        /* Статус */
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .status-free {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+        }
+
+        .status-busy {
+            background-color: rgba(241, 196, 15, 0.2);
+            color: #f1c40f;
+        }
+
+        .driver-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Шапка -->
+        <div class="header">
+            <h1>Наш автопарк</h1>
+            <div>
+                <span style="color: #aaa; margin-right: 15px;">Привет, <b>{{ user.username }}</b>!</span>
+                <form action="{% url 'logout' %}" method="POST" style="margin: 0; display: inline;">
+                    {% csrf_token %}
+                    <button type="submit"
+                        style="background: none; border: none; color: #ff4444; font-weight: bold; cursor: pointer; font-size: 15px; padding: 0;">
+                        Выйти
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Сетка карточек -->
+        <div class="trucks-grid">
+            {% for truck in trucks %}
+            <a href="{% url 'truck_detail' truck.id %}" class="truck-card">
+                <div class="truck-icon">🚚</div>
+                <h2>{{ truck.brand }}</h2>
+                <p class="plate">{{ truck.plate_number }}</p>
+
+                <div>
+                    <span class="status {% if truck.driver %}status-busy{% else %}status-free{% endif %}">
+                        {{ truck.status }}
+                    </span>
+                </div>
+
+                {% if truck.driver %}
+                <div class="driver-info">
+                    👤 Водитель: {{ truck.driver.name }}
+                </div>
+                {% endif %}
+            </a>
+            {% empty %}
+            <p style="color: #777;">В автопарке пока нет машин.</p>
+            {% endfor %}
+        </div>
+
+    </div>
+</body>
+
+</html>

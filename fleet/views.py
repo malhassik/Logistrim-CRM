@@ -27,14 +27,43 @@ def is_accountant(user):
 
 
 @login_required
+def block_truck_list(request):
+    trucks = Truck.objects.all()
+
+    context = {
+        "trucks": trucks,
+    }
+
+    return render(request, "fleet/block_truck_list.html", context)
+
+
+@login_required
+def truck_detail(request, truck_id):
+    truck = get_object_or_404(Truck, id=truck_id)
+
+    documents = truck.document_set.all()
+    fuel_records = truck.fuelrecord_set.all()
+
+    context = {
+        "truck": truck,
+        "documents": documents,
+        "fuel_records": fuel_records,
+    }
+
+    return render(request, "fleet/truck_detail.html", context)
+
+
+@login_required
 def truck_list(request):
     trucks = Truck.objects.all()
 
-    total_trucks = trucks.count()
-    free_trucks = trucks.filter(status="Свободна").count()
-    total_documents = Document.objects.count()
+    total_trucks = trucks.count()  # не нужно
+    free_trucks = trucks.filter(status="Свободна").count()  # не нужно
+    total_documents = Document.objects.count()  # не нужно
 
-    fuel_expenses = FuelRecord.objects.aggregate(total=Sum("price"))["total"]
+    fuel_expenses = FuelRecord.objects.aggregate(total=Sum("price"))[
+        "total"
+    ]  # не нужно
     if fuel_expenses is None:
         fuel_expenses = 0
 
