@@ -245,7 +245,13 @@
                     </span>
                 </div>
                 {% if truck.driver %}
-                <div class="driver-info">👤 Водитель: {{ truck.driver.name }}</div>
+                <div class="driver-info">
+                    👤 Водитель:
+                    <a href="{% url 'driver_detail' truck.driver.id %}"
+                        style="color: #007bff; text-decoration: none; font-weight: bold;">
+                        {{ truck.driver.name }}
+                    </a>
+                </div>
                 {% endif %}
             </div>
         </div>
