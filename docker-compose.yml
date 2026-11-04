@@ -1,36 +1,26 @@
 services:
-  celery:
-    build: .
-    # Команда запускает Celery worker
-    command: celery -A logistrim worker --loglevel=info
-    volumes:
-      - .:/app
-    depends_on:
-      - redis
-      - db
-    environment:
-      - DATABASE_URL=postgres://logistrim_user:logistrim_password@db:5432/logistrim_db
-      - SECRET_KEY=django-insecure-docker-secret-key-12345
-      - DEBUG=True
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
   db:
     image: postgres:15
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=logistrim_db
-      - POSTGRES_USER=logistrim_user
+      # Используем переменные с дефолтными значениями (если в .env пусто, возьмет это)
+      - POSTGRES_DB=${POSTGRES_DB:-logistrim_db}
+      - POSTGRES_USER=${POSTGRES_USER:-logistrim_user}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    # 👇 ДОБАВЛЯЕМ ПРОВЕРКУ ЗДОРОВЬЯ
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U logistrim_user -d logistrim_db" ]
+      # Обрати внимание на двойной доллар $$ - это нужно, чтобы Docker взял 
+      # переменную изнутри контейнера, а не из твоего .env
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
       interval: 5s
       timeout: 5s
       retries: 5
       start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
 
   web:
     build: .
@@ -42,7 +32,6 @@ services:
       - .:/app
     ports:
       - "8000:8000"
-    # 👇 МЕНЯЕМ DEPENDS_ON, ЧТОБЫ ЖДАТЬ ГОТОВНОСТИ БД
     depends_on:
       db:
         condition: service_healthy
@@ -52,6 +41,22 @@ services:
       - DEBUG=${DEBUG:-False}
       - ALLOWED_HOSTS=${ALLOWED_HOSTS:-localhost,127.0.0.1}
 
+  celery:
+    build: .
+    command: celery -A logistrim worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      redis:
+        condition: service_started
+      db:
+        condition: service_healthy # Ждем, пока база будет готова
+    environment:
+      # Здесь теперь тоже безопасно, никаких паролей в открытом виде
+      - DATABASE_URL=${DATABASE_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG:-False}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-localhost,127.0.0.1}
+
 volumes:
   postgres_data:
-
