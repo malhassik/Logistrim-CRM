@@ -1,3 +1,4 @@
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -289,6 +290,12 @@
                     <li class="empty-text">Нет истории заправок.</li>
                     {% endfor %}
                 </ul>
+                {% if fuel_records %}
+                <div class="total-sum">
+                    <span>Итого потрачено:</span>
+                    <span style="color: #e74c3c;">{{ total_cost|floatformat:2|intcomma }} ₽</span>
+                </div>
+                {% endif %}
             </div>
 
         </div>

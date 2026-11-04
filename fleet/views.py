@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Truck, Document, FuelRecord
+from .models import Truck, Document, FuelRecord, Driver
 from .forms import DocumentForm, FuelRecordForm, TruckForm, DriverForm
 from django.db.models import Sum
 from django import forms
@@ -29,9 +29,11 @@ def is_accountant(user):
 @login_required
 def dashboard(request):
     trucks = Truck.objects.all()
+    drivers = Driver.objects.all()
 
     context = {
         "trucks": trucks,
+        "drivers": drivers,
     }
 
     return render(request, "fleet/dashboard.html", context)
@@ -42,12 +44,18 @@ def truck_detail(request, truck_id):
     truck = get_object_or_404(Truck, id=truck_id)
 
     documents = truck.document_set.all()
-    fuel_records = truck.fuelrecord_set.all()
+    fuel_records = truck.fuelrecord_set.all().order_by("-date")
+
+    total_cost = FuelRecord.objects.aggregate(total=Sum("price"))["total"]
+
+    if total_cost is None:
+        total_cost = 0
 
     context = {
         "truck": truck,
         "documents": documents,
         "fuel_records": fuel_records,
+        "total_cost": total_cost,
     }
 
     return render(request, "fleet/truck_detail.html", context)
