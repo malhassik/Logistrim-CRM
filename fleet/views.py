@@ -62,78 +62,6 @@ def truck_detail(request, truck_id):
 
 
 @login_required
-def truck_list(request):
-    trucks = Truck.objects.all()
-
-    total_trucks = trucks.count()  # не нужно
-    free_trucks = trucks.filter(status="Свободна").count()  # не нужно
-    total_documents = Document.objects.count()  # не нужно
-
-    fuel_expenses = FuelRecord.objects.aggregate(total=Sum("price"))[
-        "total"
-    ]  # не нужно
-    if fuel_expenses is None:
-        fuel_expenses = 0
-
-    context = {
-        "trucks": trucks,
-        "total_trucks": total_trucks,
-        "free_trucks": free_trucks,
-        "total_documents": total_documents,
-        "fuel_expenses": fuel_expenses,
-    }
-
-    return render(request, "fleet/truck_list.html", context)
-
-
-@login_required
-@user_passes_test(is_accountant, login_url="/login/")
-def add_driver(request):
-    if request.method == "POST":
-        form = DriverForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("truck_list")
-    else:
-        form = DriverForm()
-
-    return render(request, "fleet/driver_form.html", {"form": form})
-
-
-@login_required
-@user_passes_test(is_accountant, login_url="/login/")
-def add_truck(request):
-    if request.method == "POST":
-        form = TruckForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("truck_list")
-    else:
-        form = TruckForm()
-
-    return render(request, "fleet/truck_form.html", {"form": form})
-
-
-@login_required
-@user_passes_test(is_accountant, login_url="/login/")
-def edit_truck(request, truck_id):
-    # 1. Находим машину в базе по её ID (если нет — выдаем ошибку 404)
-    truck = get_object_or_404(Truck, id=truck_id)
-
-    if request.method == "POST":
-        # 2. Передаем существующую машину в форму (instance=truck)
-        form = TruckForm(request.POST, instance=truck)
-        if form.is_valid():
-            form.save()  # Django обновит эту же запись, а не создаст новую
-            return redirect("truck_list")
-    else:
-        # 3. При GET-запросе показываем форму, уже заполненную данными машины
-        form = TruckForm(instance=truck)
-
-    return render(request, "fleet/truck_form.html", {"form": form, "truck": truck})
-
-
-@login_required
 @user_passes_test(is_accountant, login_url="/login/")
 def upload_document(request, truck_id):
     truck = get_object_or_404(Truck, id=truck_id)
@@ -186,19 +114,3 @@ def add_fuel_records(request, truck_id):
 
     # Передаем truck в контекст, чтобы в HTML сделать красивую кнопку "Назад"
     return render(request, "fleet/fuel_form.html", {"form": form, "truck": truck})
-
-
-@login_required
-@user_passes_test(is_accountant, login_url="/login/")
-def delete_truck(request, truck_id):
-    truck = get_object_or_404(Truck, id=truck_id)
-    truck.delete()
-    return redirect("truck_list")
-
-
-@login_required
-@user_passes_test(is_accountant, login_url="/login/")
-def fuel_list(request):
-    records = FuelRecord.objects.all().order_by("-id")
-
-    return render(request, "fleet/fuel_list.html", {"records": records})

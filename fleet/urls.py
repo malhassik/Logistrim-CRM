@@ -8,13 +8,12 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path("", views.dashboard, name="dashboard"),
-    path("truck_list/", views.truck_list, name="truck_list"),
+    path("truck/<int:truck_id>/", views.truck_detail, name="truck_detail"),
     path(
         "upload/<int:truck_id>/",
         views.upload_document,
         name="upload_document_for_truck",
     ),
-    path("fuel/", views.fuel_list, name="fuel_list"),
     path("api/trucks/", views.TruckListAPIView.as_view(), name="api_truck_list"),
     path(
         "api/trucks/<int:pk>/",
@@ -32,16 +31,11 @@ urlpatterns = [
         views.add_fuel_records,
         name="add_fuel_record_for_truck",
     ),
-    path("truck/add/", views.add_truck, name="add_truck"),
-    path("driver/add/", views.add_driver, name="add_driver"),
-    path("truck/<int:truck_id>/edit/", views.edit_truck, name="edit_truck"),
-    path("truck/<int:truck_id>/delete", views.delete_truck, name="delete_truck"),
     path(
         "api/trucks/<int:pk>/",
         views.TruckDetailAPIView.as_view(),
         name="api_truck_detail",
     ),
-    path("truck/<int:truck_id>/", views.truck_detail, name="truck_detail"),
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]
