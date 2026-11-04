@@ -1,20 +1,42 @@
 from django.db import models
+from django.core.validators import MinValueValidator
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Driver(models.Model):
-    name = models.CharField(max_length=100, verbose_name="Имя водителя")
-    phone = models.CharField(max_length=20, verbose_name="Телефон")
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Имя водителя",
+    )
+    phone = PhoneNumberField(
+        verbose_name="Телефон",
+        unique=True,
+    )
 
     def __str__(self):
         return self.name
 
 
 class Truck(models.Model):
-    plate_number = models.CharField(max_length=20, verbose_name="Госномер")
-    brand = models.CharField(max_length=50, verbose_name="Марка")
-    mileage = models.IntegerField(default=0, verbose_name="Пробег (км)")
-    status = models.CharField(max_length=50, default="Свободна", verbose_name="Статус")
-
+    plate_number = models.CharField(
+        max_length=20,
+        verbose_name="Госномер",
+        unique=True,
+    )
+    brand = models.CharField(
+        max_length=50,
+        verbose_name="Марка",
+    )
+    mileage = models.IntegerField(
+        default=0,
+        verbose_name="Пробег (км)",
+        validators=[MinValueValidator(0)],
+    )
+    status = models.CharField(
+        max_length=50,
+        default="Свободна",
+        verbose_name="Статус",
+    )
     driver = models.ForeignKey(
         Driver,
         on_delete=models.SET_NULL,
@@ -26,7 +48,7 @@ class Truck(models.Model):
     def __str__(self):
         if self.driver is not None:
             return f"{self.brand} — {self.plate_number} | Водитель: {self.driver.name}"
-        return f"{self.brand} — {self.plate_number} | Водитель: не назначен"
+        return f"{self.brand} — {self.plate_number} | Водитель: не наёначен"
 
     def save(self, *args, **kwargs):
         if self.driver is not None:
@@ -38,14 +60,27 @@ class Truck(models.Model):
 
 
 class FuelRecord(models.Model):
-    truck = models.ForeignKey(Truck, on_delete=models.CASCADE, verbose_name="Машина")
+    truck = models.ForeignKey(
+        Truck,
+        on_delete=models.CASCADE,
+        verbose_name="Машина",
+    )
     liters = models.DecimalField(
-        max_digits=6, decimal_places=2, verbose_name="Количество литров"
+        max_digits=6,
+        decimal_places=2,
+        verbose_name="Количество литров",
+        validators=[MinValueValidator(0.01)],
     )
     price = models.DecimalField(
-        max_digits=8, decimal_places=2, verbose_name="Стоимость (руб)"
+        max_digits=8,
+        decimal_places=2,
+        verbose_name="Стоимость (руб)",
+        validators=[MinValueValidator(0.01)],
     )
-    date = models.DateField(auto_now_add=True, verbose_name="Дата заправки")
+    date = models.DateField(
+        auto_now_add=True,
+        verbose_name="Дата заправки",
+    )
 
     def __str__(self):
         return f"{self.truck.plate_number} - {self.liters} л."

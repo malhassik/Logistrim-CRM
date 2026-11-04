@@ -43,9 +43,11 @@ def dashboard(request):
 def truck_detail(request, truck_id):
     truck = get_object_or_404(Truck, id=truck_id)
 
+    # Блок документов
     documents = truck.document_set.all()
-    fuel_records = truck.fuelrecord_set.all().order_by("-date")
 
+    # Блок заправки
+    fuel_records = truck.fuelrecord_set.all().order_by("-date")
     total_cost = FuelRecord.objects.aggregate(total=Sum("price"))["total"]
 
     if total_cost is None:

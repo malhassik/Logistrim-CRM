@@ -40,7 +40,10 @@ INSTALLED_APPS = [
     "fleet",
     "rest_framework",
     "rest_framework_simplejwt",
+    "phonenumber_field",
 ]
+
+PHONENUMBER_DEFAULT_REGION = "RU"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

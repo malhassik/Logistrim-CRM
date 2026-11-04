@@ -68,6 +68,14 @@
     <!-- Обрати внимание: тут нет тегов head, body и скриптов! Они в base.html -->
     <form method="POST">
         {% csrf_token %}
+        {% if form.non_field_errors %}
+        <div
+            style="background: #331111; color: #ff4444; padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px solid #551111;">
+            {% for error in form.non_field_errors %}
+            <p style="margin: 0;">{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
         <div class="form-group">
             <label>Машина:</label>
             🚚 {{ truck.brand }} ({{ truck.plate_number }})
@@ -75,10 +83,20 @@
         <div class="form-group">
             <label>Литры:</label>
             {{ form.liters }}
+            {% if form.liters.errors %}
+            <div style="color: #ff4444; font-size: 14px; margin-top: 5px;">
+                {{ form.liters.errors.0 }}
+            </div>
+            {% endif %}
         </div>
         <div class="form-group">
             <label>Стоимость (руб):</label>
             {{ form.price }}
+            {% if form.price.errors %}
+            <div style="color: #ff4444; font-size: 14px; margin-top: 5px;">
+                {{ form.price.errors.0 }}
+            </div>
+            {% endif %}
         </div>
         <button type="submit">Сохранить заправку</button>
     </form>
