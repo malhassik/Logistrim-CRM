@@ -204,12 +204,14 @@
         </div>
 
         <!-- Блок с водителями -->
-        <h2 style="margin-top: 50px; color: #fff; border-bottom: 2px solid #333; padding-bottom: 10px;">👤 Наши водители
+        <h2 style="margin-top: 50px; color: #fff; border-bottom: 2px solid #333; padding-bottom: 10px;">
+            👤 Наши водители
         </h2>
 
         <div class="drivers-grid">
             {% for driver in drivers %}
-            <div class="driver-card">
+            <a href="{% url 'driver_detail' driver.id %}" class="driver-card"
+                style="text-decoration: none; display: block;">
                 <div class="driver-icon">👨‍✈️</div>
                 <h3>{{ driver.name }}</h3>
                 <p class="phone">📞 {{ driver.phone }}</p>
@@ -226,7 +228,7 @@
                 </div>
                 {% endif %}
                 {% endwith %}
-            </div>
+            </a>
             {% empty %}
             <p style="color: #777;">Водителей пока нет.</p>
             {% endfor %}

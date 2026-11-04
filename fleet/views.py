@@ -64,6 +64,17 @@ def truck_detail(request, truck_id):
 
 
 @login_required
+def driver_detail(request, driver_id):
+    driver = get_object_or_404(Driver, id=driver_id)
+
+    context = {
+        "driver": driver,
+    }
+
+    return render(request, "fleet/driver_detail.html", context)
+
+
+@login_required
 @user_passes_test(is_accountant, login_url="/login/")
 def upload_document(request, truck_id):
     truck = get_object_or_404(Truck, id=truck_id)
