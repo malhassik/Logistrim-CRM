@@ -56,6 +56,8 @@ class Truck(models.Model):
         else:
             self.status = "Свободна"
 
+        self.plate_number = self.plate_number.upper()
+
         super().save(*args, **kwargs)
 
 

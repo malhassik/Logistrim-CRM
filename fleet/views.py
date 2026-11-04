@@ -48,7 +48,7 @@ def truck_detail(request, truck_id):
 
     # Блок заправки
     fuel_records = truck.fuelrecord_set.all().order_by("-date")
-    total_cost = FuelRecord.objects.aggregate(total=Sum("price"))["total"]
+    total_cost = fuel_records.aggregate(total=Sum("price"))["total"]
 
     if total_cost is None:
         total_cost = 0
