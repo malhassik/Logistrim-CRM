@@ -156,7 +156,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     )
 }
-
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # Настройки Celery
 # CELERY_BROKER_URL = "redis://redis:6379/0"  # Адрес Redis внутри Docker-сети
 # CELERY_RESULT_BACKEND = "redis://redis:6379/0"
