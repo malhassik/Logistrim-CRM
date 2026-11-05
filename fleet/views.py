@@ -65,6 +65,11 @@ def truck_detail(request, truck_id):
 def driver_detail(request, driver_id):
     driver = get_object_or_404(Driver, id=driver_id)
 
+    if driver.license_number:
+        fix_driver_license = f"{driver.license_number[0:2]} {driver.license_number[2:4]} {driver.license_number[4:]}"
+    else:
+        fix_driver_license = "Не указан"
+
     if request.method == "POST":
         form = DriverNotesForm(request.POST, instance=driver)
         if form.is_valid():
@@ -74,6 +79,7 @@ def driver_detail(request, driver_id):
         form = DriverNotesForm(instance=driver)
 
     context = {
+        "fix_driver_license": fix_driver_license,
         "driver": driver,
         "form": form,
     }

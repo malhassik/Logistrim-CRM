@@ -174,7 +174,7 @@
                 <div class="driver-avatar">👨‍✈️</div>
                 <div class="driver-title">
                     <h2>{{ driver.name }}</h2>
-                    <p>📞 {{ driver.phone }}</p>
+                    <p>📞 {{ driver.phone.as_national }}</p>
                 </div>
             </div>
 
@@ -194,10 +194,10 @@
             </div>
 
 
-            {% if driver.license_number %}
+            {% if fix_driver_license %}
             <div class="info-block">
                 <h3>🪪 Водительское удостоверение</h3>
-                <p>{{ driver.license_number }}</p>
+                <p>{{ fix_driver_license }}</p>
             </div>
             {% endif %}
 
