@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Truck, Document, Driver
-from .forms import DocumentForm, FuelRecordForm, DriverNotesForm
+from .forms import DocumentForm, FuelRecordForm, DriverNotesForm, DriverAvatarForm
 from django.db.models import Sum
 from rest_framework.decorators import api_view
 from .serializers import TruckSerializer
@@ -65,23 +65,29 @@ def truck_detail(request, truck_id):
 def driver_detail(request, driver_id):
     driver = get_object_or_404(Driver, id=driver_id)
 
-    if driver.license_number:
-        fix_driver_license = f"{driver.license_number[0:2]} {driver.license_number[2:4]} {driver.license_number[4:]}"
-    else:
-        fix_driver_license = "Не указан"
-
     if request.method == "POST":
-        form = DriverNotesForm(request.POST, instance=driver)
-        if form.is_valid():
-            form.save()
-            return redirect("driver_detail", driver_id=driver.id)
+        # Если пользователь загрузил фото (мы проверим это по имени кнопки)
+        if "submit_avatar" in request.POST:
+            avatar_form = DriverAvatarForm(request.POST, request.FILES, instance=driver)
+            if avatar_form.is_valid():
+                avatar_form.save()
+                return redirect("driver_detail", driver_id=driver.id)
+
+        # Если пользователь сохранил заметку
+        elif "submit_notes" in request.POST:
+            notes_form = DriverNotesForm(request.POST, instance=driver)
+            if notes_form.is_valid():
+                notes_form.save()
+                return redirect("driver_detail", driver_id=driver.id)
     else:
-        form = DriverNotesForm(instance=driver)
+        # Если просто открыли страницу, создаем пустые формы
+        avatar_form = DriverAvatarForm(instance=driver)
+        notes_form = DriverNotesForm(instance=driver)
 
     context = {
-        "fix_driver_license": fix_driver_license,
         "driver": driver,
-        "form": form,
+        "notes_form": notes_form,
+        "avatar_form": avatar_form,
     }
 
     return render(request, "fleet/driver_detail.html", context)

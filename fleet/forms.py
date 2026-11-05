@@ -54,3 +54,9 @@ class DriverNotesForm(forms.ModelForm):
                 }
             ),
         }
+
+
+class DriverAvatarForm(forms.ModelForm):
+    class Meta:
+        model = Driver
+        fields = ["avatar"]

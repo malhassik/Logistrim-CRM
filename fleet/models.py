@@ -30,6 +30,12 @@ class Driver(models.Model):
         null=True,
         blank=True,
     )
+    avatar = models.ImageField(
+        upload_to="avatars/",
+        null=True,
+        blank=True,
+        verbose_name="Аватарка",
+    )
 
     def __str__(self):
         return self.name
