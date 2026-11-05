@@ -214,7 +214,7 @@
                 style="text-decoration: none; display: block;">
                 <div class="driver-icon">👨‍✈️</div>
                 <h3>{{ driver.name }}</h3>
-                <p class="phone">📞 {{ driver.phone }}</p>
+                <p class="phone">📞 {{ driver.phone.as_national }}</p>
 
                 <!-- Проверяем, есть ли у водителя машина (обратная связь ForeignKey) -->
                 {% with truck=driver.truck_set.first %}

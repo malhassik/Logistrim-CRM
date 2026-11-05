@@ -65,25 +65,26 @@ def truck_detail(request, truck_id):
 def driver_detail(request, driver_id):
     driver = get_object_or_404(Driver, id=driver_id)
 
+    # 1. Создаем обе формы заранее (с текущими данными водителя для GET)
+    avatar_form = DriverAvatarForm(instance=driver)
+    notes_form = DriverNotesForm(instance=driver)
+
+    # 2. Если пришел POST-запрос, обновляем нужную форму
     if request.method == "POST":
-        # Если пользователь загрузил фото (мы проверим это по имени кнопки)
-        if "submit_avatar" in request.POST:
+        if "avatar" in request.FILES:
             avatar_form = DriverAvatarForm(request.POST, request.FILES, instance=driver)
             if avatar_form.is_valid():
                 avatar_form.save()
                 return redirect("driver_detail", driver_id=driver.id)
 
-        # Если пользователь сохранил заметку
+        # Иначе, если нажата кнопка сохранения заметок
         elif "submit_notes" in request.POST:
             notes_form = DriverNotesForm(request.POST, instance=driver)
             if notes_form.is_valid():
                 notes_form.save()
                 return redirect("driver_detail", driver_id=driver.id)
-    else:
-        # Если просто открыли страницу, создаем пустые формы
-        avatar_form = DriverAvatarForm(instance=driver)
-        notes_form = DriverNotesForm(instance=driver)
 
+    # 3. Передаем обе формы в шаблон (они всегда существуют)
     context = {
         "driver": driver,
         "notes_form": notes_form,
