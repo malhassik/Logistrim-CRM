@@ -1,10 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Truck, Document, FuelRecord, Driver
-from .forms import DocumentForm, FuelRecordForm, TruckForm, DriverForm
+from .models import Truck, Document, Driver
+from .forms import DocumentForm, FuelRecordForm, DriverNotesForm
 from django.db.models import Sum
-from django import forms
-from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from .serializers import TruckSerializer
 from rest_framework import generics, permissions
@@ -67,8 +65,17 @@ def truck_detail(request, truck_id):
 def driver_detail(request, driver_id):
     driver = get_object_or_404(Driver, id=driver_id)
 
+    if request.method == "POST":
+        form = DriverNotesForm(request.POST, instance=driver)
+        if form.is_valid():
+            form.save()
+            return redirect("driver_detail", driver_id=driver.id)
+    else:
+        form = DriverNotesForm(instance=driver)
+
     context = {
         "driver": driver,
+        "form": form,
     }
 
     return render(request, "fleet/driver_detail.html", context)

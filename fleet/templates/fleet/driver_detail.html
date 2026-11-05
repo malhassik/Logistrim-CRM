@@ -178,6 +178,29 @@
                 </div>
             </div>
 
+            <!-- Блок заметок с формой редактирования -->
+            <div
+                style="margin-top: 20px; margin-bottom: 20px; background: #252525; padding: 20px; border-radius: 8px; border-left: 4px solid #f1c40f;">
+                <h3 style="color: #fff; margin-top: 0; margin-bottom: 15px;">📝 Заметки</h3>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.notes }}
+                    <button type="submit"
+                        style="margin-top: 10px; padding: 8px 15px; background-color: #f1c40f; color: #000; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">
+                        Сохранить заметку
+                    </button>
+                </form>
+            </div>
+
+
+            {% if driver.license_number %}
+            <div class="info-block">
+                <h3>🪪 Водительское удостоверение</h3>
+                <p>{{ driver.license_number }}</p>
+            </div>
+            {% endif %}
+
             <!-- Блок с прикрепленной машиной -->
             {% with truck=driver.truck_set.first %}
             {% if truck %}

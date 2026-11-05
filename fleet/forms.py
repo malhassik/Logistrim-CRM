@@ -40,34 +40,17 @@ class FuelRecordForm(forms.ModelForm):
         }
 
 
-class TruckForm(forms.ModelForm):
-    class Meta:
-        model = Truck
-        fields = ["brand", "plate_number", "mileage", "driver"]
-        widgets = {
-            "brand": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Например: Volvo"}
-            ),
-            "plate_number": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "А123ВС77"}
-            ),
-            "mileage": forms.NumberInput(
-                attrs={"class": "form-control", "placeholder": "0"}
-            ),
-            "driver": forms.Select(attrs={"class": "form-control"}),
-        }
-
-
-class DriverForm(forms.ModelForm):
+class DriverNotesForm(forms.ModelForm):
     class Meta:
         model = Driver
-        fields = ["name", "phone"]
-
+        fields = ["notes"]
         widgets = {
-            "name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Например: Иван Иванов"}
-            ),
-            "phone": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "+7 999 123-45-67"}
+            "notes": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 3,
+                    "placeholder": "Напишите что-нибудь о водителе...",
+                    "style": "width: 100%; background: #2d2d2d; color: white; border: 1px solid #444; border-radius: 5px; padding: 10px; box-sizing: border-box; font-family: inherit;",
+                }
             ),
         }

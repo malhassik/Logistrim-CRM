@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from phonenumber_field.modelfields import PhoneNumberField
+from django.core.validators import RegexValidator
 
 
 class Driver(models.Model):
@@ -11,6 +12,23 @@ class Driver(models.Model):
     phone = PhoneNumberField(
         verbose_name="Телефон",
         unique=True,
+    )
+    notes = models.TextField(
+        blank=True,
+        verbose_name="Заметки",
+    )
+    license_number = models.CharField(
+        max_length=20,
+        unique=True,
+        verbose_name="ВУ",
+        validators=[
+            RegexValidator(
+                regex=r"^\d{10}$",  # Регулярное выражение: ровно 10 цифр
+                message="Номер ВУ должен состоять ровно из 10 цифр",
+            )
+        ],
+        null=True,
+        blank=True,
     )
 
     def __str__(self):
