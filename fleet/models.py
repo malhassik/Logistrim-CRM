@@ -37,6 +37,14 @@ class Driver(models.Model):
         verbose_name="Аватарка",
     )
 
+    @property
+    def formatted_license(self):
+        if not self.license_number:
+            return "Не указан"
+        num = str(self.license_number)
+
+        return f"{num[:2]} {num[2:4]} {num[4:]}"
+
     def __str__(self):
         return self.name
 
