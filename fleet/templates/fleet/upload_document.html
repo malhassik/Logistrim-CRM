@@ -1,213 +1,45 @@
-<!DOCTYPE html>
-<html lang="ru">
+{% extends 'fleet/base.html' %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Загрузить документ | Логистрим</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Manrope', 'Segoe UI', Arial, sans-serif;
-            background-color: #121212;
-            color: #e0e0e0;
-            padding: 50px;
-        }
+{% block title %}Загрузить документ | Логистрим{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'fleet/css/forms.css' %}">
+{% endblock %}
 
-        .container {
-            background-color: #1e1e1e;
-            width: 50%;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 30px;
-            border-radius: 10px;
-            border: 1px solid #333;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-        }
+{% block content %}
+<main class="form-container">
+    <h1>Загрузка документа</h1>
 
-        h1 {
-            color: #fff;
-            border-bottom: 2px solid #333;
-            padding-bottom: 10px;
-            margin-top: 0;
-        }
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+        {% if form.non_field_errors %}
+        <div class="error-box">
+            {{ form.non_field_errors.0 }}
+        </div>
+        {% endif %}
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #aaa;
-            font-weight: bold;
-        }
-
-        /* Стили для полей ввода */
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            background: #2d2d2d;
-            border: 1px solid #444;
-            color: white;
-            box-sizing: border-box;
-            border-radius: 5px;
-            font-size: 15px;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #007bff;
-        }
-
-        /* Стиль для input type="file" */
-        input[type="file"]::file-selector-button {
-            background-color: #333;
-            color: white;
-            border: 1px solid #555;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 15px;
-            transition: 0.3s;
-        }
-
-        input[type="file"]::file-selector-button:hover {
-            background-color: #555;
-        }
-
-        /* Блок с информацией о машине */
-        .truck-info {
-            padding: 12px;
-            background: #252525;
-            border: 1px solid #444;
-            border-radius: 5px;
-            color: #fff;
-            font-weight: bold;
-            font-size: 16px;
-            border-left: 4px solid #007bff;
-        }
-
-        /* Кнопка отправки */
-        button {
-            padding: 14px 20px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            font-weight: bold;
-            font-size: 16px;
-            margin-top: 10px;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background: #0056b3;
-        }
-
-        /* Ссылка назад */
-        .back-btn {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #007bff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .back-btn:hover {
-            text-decoration: underline;
-        }
-
-        /* Ошибки */
-        .error-box {
-            color: #ff4444;
-            background: #331111;
-            padding: 12px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            border: 1px solid #551111;
-            font-size: 14px;
-        }
-
-        .field-error {
-            color: #ff4444;
-            font-size: 13px;
-            margin-top: 5px;
-            display: block;
-        }
-
-        /* Адаптив для форм на мобильных */
-        @media (max-width: 768px) {
-            body {
-                padding: 15px;
-                /* Уменьшаем отступы по краям */
-            }
-
-            .container,
-            .card {
-                width: 100% !important;
-                /* Растягиваем форму на весь экран */
-                padding: 20px;
-                box-sizing: border-box;
-            }
-
-            h1,
-            h2 {
-                font-size: 24px;
-                /* Чуть уменьшаем заголовки */
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <h1>Загрузка документа</h1>
-
-        <!-- ВАЖНО: enctype="multipart/form-data" обязателен для файлов! -->
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-
-            <!-- Вывод общих ошибок формы (например, "Файл не выбран") -->
-            {% if form.non_field_errors %}
-            <div class="error-box">
-                {{ form.non_field_errors.0 }}
-            </div>
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}">Название документа:</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+            <span class="field-error">{{ form.title.errors.0 }}</span>
             {% endif %}
+        </div>
 
-            <!-- Поле: Название документа -->
-            <div class="form-group">
-                <label>Название документа:</label>
-                {{ form.title }}
-                {% if form.title.errors %}
-                <span class="field-error">{{ form.title.errors.0 }}</span>
-                {% endif %}
-            </div>
+        <div class="form-group">
+            <label>Машина:</label>
+            <div class="truck-info">🚚 {{ truck.brand }} ({{ truck.plate_number }})</div>
+        </div>
 
-            <!-- Поле: Машина (только для чтения, так как мы уже знаем, куда грузим) -->
-            <div class="form-group">
-                <label>Машина:</label>
-                <div class="truck-info">
-                    🚚 {{ truck.brand }} ({{ truck.plate_number }})
-                </div>
-            </div>
+        <div class="form-group">
+            <label for="id_files">Файлы (можно выбрать несколько):</label>
+            <input type="file" name="files" id="id_files" multiple class="form-control" required>
+        </div>
 
-            <!-- Поле: Файлы (создаем вручную, чтобы разрешить multiple) -->
-            <div class="form-group">
-                <label>Файлы (можно выбрать несколько):</label>
-                <input type="file" name="files" multiple class="form-control" required>
-            </div>
+        <button type="submit" class="btn-primary">Загрузить документ(ы)</button>
+    </form>
 
-            <button type="submit">Загрузить документ(ы)</button>
-        </form>
-
-        <a href="{% url 'dashboard' %}" class="back-btn">← Вернуться в автопарк</a>
-    </div>
-</body>
-
-</html>
+    <a href="{% url 'dashboard' %}" class="back-btn">← Вернуться в автопарк</a>
+</main>
+{% endblock %}

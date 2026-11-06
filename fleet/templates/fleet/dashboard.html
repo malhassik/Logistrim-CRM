@@ -1,193 +1,29 @@
-<!DOCTYPE html>
-<html lang="ru">
+{% extends 'fleet/base.html' %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Автопарк | Логистрим</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            /* Делаем тело страницы гибким контейнером */
-            display: flex;
-            flex-direction: column;
-            /* Растягиваем тело на 100% высоты экрана (vh - viewport height) */
-            min-height: 100vh;
-            /* Твой старый фон и цвет оставляем */
-            background-color: #121212;
-            color: #e0e0e0;
-            margin: 0;
-            padding: 0;
+{% block title %}Автопарк | Логистрим{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'fleet/css/dashboard.css' %}">
+{% endblock %}
 
-            font-family: 'Manrope', 'Segoe UI', Arial, sans-serif;
-        }
-
-        .container {
-            /* Говорим контейнеру с карточками занять все свободное место */
-            flex: 1;
-            /* И сохраняем твои старые стили для центрирования */
-            width: 90%;
-            max-width: 1200px;
-            margin: 40px auto;
-        }
-
-        /* Шапка сайта */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #333;
-            padding-bottom: 15px;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            margin: 0;
-            color: #fff;
-        }
-
-        /* Сетка для карточек */
-        .trucks-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        /* Карточка машины */
-        .truck-card {
-            background-color: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 10px;
-            padding: 25px;
-            text-decoration: none;
-            color: #e0e0e0;
-            transition: 0.3s;
-            display: block;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .truck-card:hover {
-            transform: translateY(-5px);
-            /* Эффект при наведении */
-            border-color: #007bff;
-            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.2);
-        }
-
-        .truck-icon {
-            font-size: 40px;
-            margin-bottom: 15px;
-        }
-
-        .truck-card h2 {
-            margin: 0 0 5px 0;
-            color: #fff;
-            font-size: 24px;
-        }
-
-        .truck-card .plate {
-            font-size: 18px;
-            font-weight: bold;
-            color: #007bff;
-            margin: 0 0 15px 0;
-        }
-
-        /* Статус */
-        .status {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .status-free {
-            background-color: rgba(46, 204, 113, 0.2);
-            color: #2ecc71;
-        }
-
-        .status-busy {
-            background-color: rgba(241, 196, 15, 0.2);
-            color: #f1c40f;
-        }
-
-        .driver-info {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #aaa;
-        }
-
-        /* Сетка для водителей (такая же, как для машин) */
-        .drivers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        /* Карточка водителя */
-        .driver-card {
-            background-color: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            border-left: 5px solid #17a2b8;
-            /* Бирюзовая полоска, чтобы отличать от машин */
-        }
-
-        .driver-card h3 {
-            margin: 10px 0 5px 0;
-            color: #fff;
-            font-size: 22px;
-        }
-
-        .driver-card .phone {
-            color: #aaa;
-            font-size: 15px;
-            margin: 0 0 15px 0;
-        }
-
-        .driver-icon {
-            font-size: 40px;
-        }
-
-        /* Плашка с машиной */
-        .assigned-truck {
-            font-size: 14px;
-            color: #e0e0e0;
-            background: #2d2d2d;
-            padding: 10px;
-            border-radius: 5px;
-            border-left: 3px solid #2ecc71;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-
-        <!-- Шапка -->
-        <div class="header">
-            <h1>Наш автопарк</h1>
-            <div>
-                <span style="color: #aaa; margin-right: 15px;">Привет, <b>{{ user.username }}</b>!</span>
-                <form action="{% url 'logout' %}" method="POST" style="margin: 0; display: inline;">
-                    {% csrf_token %}
-                    <button type="submit"
-                        style="background: none; border: none; color: #ff4444; font-weight: bold; cursor: pointer; font-size: 15px; padding: 0;">
-                        Выйти
-                    </button>
-                </form>
-            </div>
+{% block content %}
+<main class="container dashboard-container">
+    <header class="header">
+        <h1>Наш автопарк</h1>
+        <div class="user-info">
+            <span>Привет, <b>{{ user.username }}</b>!</span>
+            <form action="{% url 'logout' %}" method="POST" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Выйти</button>
+            </form>
         </div>
+    </header>
 
-        <!-- Сетка карточек -->
+    <section aria-label="Автопарк">
         <div class="trucks-grid">
             {% for truck in trucks %}
             <a href="{% url 'truck_detail' truck.id %}" class="truck-card">
-                <div class="truck-icon">🚚</div>
+                <div class="truck-icon" aria-hidden="true">🚚</div>
                 <h2>{{ truck.brand }}</h2>
                 <p class="plate">{{ truck.plate_number }}</p>
 
@@ -204,42 +40,37 @@
                 {% endif %}
             </a>
             {% empty %}
-            <p style="color: #777;">В автопарке пока нет машин.</p>
+            <p class="empty-text">В автопарке пока нет машин.</p>
             {% endfor %}
         </div>
+    </section>
 
-        <!-- Блок с водителями -->
-        <h2 style="margin-top: 50px; color: #fff; border-bottom: 2px solid #333; padding-bottom: 10px;">
-            👤 Наши водители
-        </h2>
+    <section class="drivers-section" aria-labelledby="drivers-heading">
+        <h2 class="section-title" id="drivers-heading">👤 Наши водители</h2>
 
         <div class="drivers-grid">
             {% for driver in drivers %}
-            <a href="{% url 'driver_detail' driver.id %}" class="driver-card"
-                style="text-decoration: none; display: block;">
-                <div class="driver-icon">👨‍✈️</div>
+            <a href="{% url 'driver_detail' driver.id %}" class="driver-card">
+                <div class="driver-icon" aria-hidden="true">👨‍✈️</div>
                 <h3>{{ driver.name }}</h3>
                 <p class="phone">📞 {{ driver.phone.as_national }}</p>
 
-                <!-- Проверяем, есть ли у водителя машина (обратная связь ForeignKey) -->
                 {% with truck=driver.truck_set.first %}
-                {% if truck %}
-                <div class="assigned-truck">
-                    🚚 Машина: {{ truck.brand }} ({{ truck.plate_number }})
-                </div>
-                {% else %}
-                <div class="assigned-truck" style="color: #777; border-left: 3px solid #555;">
-                    🚚 Без машины
-                </div>
-                {% endif %}
+                    {% if truck %}
+                    <div class="assigned-truck">
+                        🚚 Машина: {{ truck.brand }} ({{ truck.plate_number }})
+                    </div>
+                    {% else %}
+                    <div class="assigned-truck assigned-truck-empty">
+                        🚚 Без машины
+                    </div>
+                    {% endif %}
                 {% endwith %}
             </a>
             {% empty %}
-            <p style="color: #777;">Водителей пока нет.</p>
+            <p class="empty-text">Водителей пока нет.</p>
             {% endfor %}
         </div>
-    </div>
-
-</body>
-
-</html>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,153 @@
+/* Общие настройки проекта */
+:root {
+    color-scheme: dark;
+    --color-page: #121212;
+    --color-surface: #1e1e1e;
+    --color-surface-soft: #252525;
+    --color-input: #2d2d2d;
+    --color-border: #333;
+    --color-border-light: #444;
+    --color-text: #e0e0e0;
+    --color-muted: #aaa;
+    --color-subtle: #777;
+    --color-white: #fff;
+    --color-primary: #007bff;
+    --color-primary-hover: #0056b3;
+    --color-danger: #e74c3c;
+    --color-success: #2ecc71;
+    --color-warning: #f1c40f;
+    --font-main: 'Manrope', 'Segoe UI', Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    background: var(--color-page);
+    color: var(--color-text);
+    font-family: var(--font-main);
+    line-height: 1.5;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    color: inherit;
+}
+
+.container {
+    width: min(90%, 1200px);
+    margin: 40px auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--color-border);
+}
+
+.header h1 {
+    margin: 0;
+    color: var(--color-white);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: var(--color-muted);
+}
+
+.logout-form {
+    display: inline;
+    margin: 0;
+}
+
+.logout-btn {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: #ff4444;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.logout-btn:hover {
+    color: #ff7777;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: var(--color-primary);
+    font-weight: 700;
+    text-decoration: none;
+    transition: color .2s ease;
+}
+
+.back-btn:hover {
+    color: #4da3ff;
+    text-decoration: underline;
+}
+
+.empty-text {
+    color: var(--color-subtle);
+}
+
+.error-box {
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid var(--color-danger);
+    border-radius: 8px;
+    background: rgba(231, 76, 60, .1);
+    color: #ff6b60;
+    font-size: 14px;
+}
+
+.error-box p {
+    margin: 0;
+}
+
+.field-error {
+    display: block;
+    margin-top: 5px;
+    color: #ff6b60;
+    font-size: 13px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: calc(100% - 30px);
+        margin: 20px auto;
+    }
+
+    .header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .user-info {
+        width: 100%;
+        justify-content: space-between;
+    }
+}

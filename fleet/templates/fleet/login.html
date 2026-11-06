@@ -1,168 +1,42 @@
-<!DOCTYPE html>
-<html lang="ru">
+{% extends 'fleet/base.html' %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход | Логистрим</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* Сбрасываем отступы и делаем темный фон на весь экран */
-        body {
-            font-family: 'Manrope', 'Segoe UI', Arial, sans-serif;
-            background-color: #121212;
-            color: #e0e0e0;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            /* Растягиваем на весь экран */
-        }
+{% block title %}Вход | Логистрим{% endblock %}
+{% block body_class %}login-page{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'fleet/css/login.css' %}">
+{% endblock %}
 
-        /* Карточка входа */
-        .login-card {
-            background-color: #1e1e1e;
-            width: 100%;
-            max-width: 400px;
-            padding: 40px;
-            border-radius: 12px;
-            border: 1px solid #333;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            box-sizing: border-box;
-            margin: 20px;
-        }
+{% block content %}
+<main class="login-card">
+    <header class="login-header">
+        <div class="logo" aria-hidden="true">🚚</div>
+        <h1>Вход в систему</h1>
+        <p>Введите данные для доступа к CRM</p>
+    </header>
 
-        /* Логотип и заголовок */
-        .login-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .login-header .logo {
-            font-size: 50px;
-            margin-bottom: 10px;
-        }
-
-        .login-header h2 {
-            margin: 0;
-            color: #ffffff;
-            font-size: 24px;
-        }
-
-        .login-header p {
-            color: #888;
-            margin-top: 5px;
-            font-size: 14px;
-        }
-
-        /* Поля ввода */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #aaa;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            background-color: #2d2d2d;
-            border: 1px solid #444;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 16px;
-            box-sizing: border-box;
-            transition: 0.3s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #007bff;
-            /* Синяя рамка при клике */
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
-        }
-
-        /* Кнопка */
-        .btn-submit {
-            width: 100%;
-            padding: 14px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
-        }
-
-        .btn-submit:hover {
-            background-color: #0056b3;
-        }
-
-        /* Блок с ошибками */
-        .error-box {
-            background-color: rgba(231, 76, 60, 0.1);
-            border: 1px solid #e74c3c;
-            color: #e74c3c;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 14px;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="login-card">
-
-        <div class="login-header">
-            <div class="logo">🚚</div>
-            <h2>Вход в систему</h2>
-            <p>Введите данные для доступа к CRM</p>
-        </div>
-
-        <!-- Вывод ошибок, если логин/пароль неверны -->
-        {% if form.errors %}
-        <div class="error-box">
-            Неверный логин или пароль. Попробуйте еще раз.
-        </div>
-        {% endif %}
-
-        <!-- action="." означает отправку формы на текущий URL -->
-        <form method="POST" action=".">
-            {% csrf_token %} <!-- Обязательный токен безопасности Django -->
-
-            <div class="form-group">
-                <label>Логин:</label>
-                <!-- В Django LoginView ожидает поле name="username" -->
-                <input type="text" name="username" class="form-control" placeholder="Введите ваш логин" required
-                    autofocus>
-            </div>
-
-            <div class="form-group">
-                <label>Пароль:</label>
-                <!-- В Django LoginView ожидает поле name="password" -->
-                <input type="password" name="password" class="form-control" placeholder="Введите ваш пароль" required>
-            </div>
-
-            <button type="submit" class="btn-submit">Войти в систему</button>
-        </form>
-
+    {% if form.errors %}
+    <div class="error-box">
+        Неверный логин или пароль. Попробуйте еще раз.
     </div>
+    {% endif %}
 
-</body>
+    <form method="POST" action=".">
+        {% csrf_token %}
 
-</html>
+        <div class="form-group">
+            <label for="id_username">Логин:</label>
+            <input type="text" name="username" id="id_username" class="form-control"
+                   placeholder="Введите ваш логин" required autofocus>
+        </div>
+
+        <div class="form-group">
+            <label for="id_password">Пароль:</label>
+            <input type="password" name="password" id="id_password" class="form-control"
+                   placeholder="Введите ваш пароль" required>
+        </div>
+
+        <button type="submit" class="btn-submit">Войти в систему</button>
+    </form>
+</main>
+{% endblock %}

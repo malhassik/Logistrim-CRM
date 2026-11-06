@@ -1,314 +1,85 @@
-<!DOCTYPE html>
-<html lang="ru">
+{% extends 'fleet/base.html' %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ driver.name }} | Логистрим</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Manrope', 'Segoe UI', Arial, sans-serif;
-            background-color: #121212;
-            color: #e0e0e0;
-            padding: 40px;
-            margin: 0;
-        }
+{% block title %}{{ driver.name }} | Логистрим{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'fleet/css/driver_detail.css' %}">
+{% endblock %}
 
-        .container {
-            width: 90%;
-            max-width: 800px;
-            margin: 0 auto;
-        }
+{% block content %}
+<main class="container driver-detail-container">
+    <header class="header">
+        <a href="{% url 'dashboard' %}" class="brand-link">
+            <h1>Наш автопарк</h1>
+        </a>
+        <div class="user-info">
+            <span>Привет, <b>{{ user.username }}</b>!</span>
+            <form action="{% url 'logout' %}" method="POST" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Выйти</button>
+            </form>
+        </div>
+    </header>
 
-        /* Шапка */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #333;
-            padding-bottom: 15px;
-            margin-bottom: 30px;
-        }
+    <a href="{% url 'dashboard' %}" class="back-btn">← Назад к автопарку</a>
 
-        .header h1 {
-            margin: 0;
-            color: #fff;
-            font-size: 28px;
-        }
+    <section class="driver-card">
+        <div class="driver-header">
+            <div class="avatar-container">
+                <div class="avatar-circle">
+                    {% if driver.avatar %}
+                    <img src="{{ driver.avatar.url }}" alt="Фото водителя {{ driver.name }}">
+                    {% else %}
+                    <span class="avatar-placeholder" aria-hidden="true">👨‍✈️</span>
+                    {% endif %}
+                </div>
 
-        .header a {
-            text-decoration: none;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            color: #aaa;
-        }
-
-        .logout-btn {
-            background: none;
-            border: none;
-            color: #ff4444;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 15px;
-            padding: 0;
-        }
-
-        /* Кнопка назад */
-        .back-btn {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #007bff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .back-btn:hover {
-            text-decoration: underline;
-        }
-
-        /* Карточка водителя */
-        .driver-card {
-            background-color: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            border-top: 5px solid #17a2b8;
-        }
-
-        /* Шапка карточки (Аватарка + Имя) */
-        .driver-header {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-
-        /* Блок аватарки */
-        .avatar-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .avatar-circle {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: #2d2d2d;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            border: 3px solid #17a2b8;
-        }
-
-        .avatar-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .avatar-placeholder {
-            font-size: 60px;
-        }
-
-        /* Форма загрузки аватарки (скрытая) */
-        .avatar-form input[type="file"] {
-            display: none;
-        }
-
-        .avatar-form label {
-            color: #007bff;
-            font-size: 14px;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        .avatar-form label:hover {
-            color: #4da3ff;
-        }
-
-        /* Инфо блоки */
-        .driver-title h2 {
-            margin: 0 0 5px 0;
-            color: #fff;
-            font-size: 32px;
-        }
-
-        .driver-title p {
-            margin: 0;
-            color: #aaa;
-            font-size: 18px;
-        }
-
-        .info-block {
-            background: #252525;
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid #2ecc71;
-            margin-bottom: 15px;
-        }
-
-        .info-block h3 {
-            margin: 0 0 10px 0;
-            color: #fff;
-            font-size: 18px;
-        }
-
-        .info-block p {
-            margin: 5px 0;
-            color: #ccc;
-            font-size: 16px;
-        }
-
-        .notes-block {
-            border-left-color: #f1c40f;
-        }
-
-        .license-block {
-            border-left-color: #3498db;
-        }
-
-        .no-truck {
-            border-left-color: #e74c3c;
-        }
-
-        /* Кнопка сохранения заметок */
-        .btn-save-notes {
-            margin-top: 10px;
-            padding: 8px 15px;
-            background-color: #f1c40f;
-            color: #000;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn-save-notes:hover {
-            background-color: #d4ac0d;
-        }
-
-        /* Адаптив для телефонов */
-        @media (max-width: 768px) {
-            body {
-                padding: 15px;
-            }
-
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-
-            .user-info {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .driver-header {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-
-        <!-- Шапка сайта -->
-        <div class="header">
-            <a href="{% url 'dashboard' %}">
-                <h1>Наш автопарк</h1>
-            </a>
-            <div class="user-info">
-                <span>Привет, <b>{{ user.username }}</b>!</span>
-                <form action="{% url 'logout' %}" method="POST" style="margin: 0;">
+                <form method="POST" enctype="multipart/form-data" class="avatar-form">
                     {% csrf_token %}
-                    <button type="submit" class="logout-btn">Выйти</button>
+                    <label for="avatar_input">Выбрать фото</label>
+                    <input type="file" name="avatar" id="avatar_input" accept="image/*">
+                    <button type="submit" name="submit_avatar" class="avatar-submit-btn">
+                        Загрузить фото
+                    </button>
                 </form>
+            </div>
+
+            <div class="driver-title">
+                <h2>{{ driver.name }}</h2>
+                <p>📞 {{ driver.phone.as_national }}</p>
             </div>
         </div>
 
-        <a href="{% url 'dashboard' %}" class="back-btn">← Назад к автопарку</a>
+        <section class="info-block notes-block">
+            <h3>📝 Заметки</h3>
+            <form method="POST">
+                {% csrf_token %}
+                {{ notes_form.notes }}
+                <button type="submit" name="submit_notes" class="btn-save-notes">
+                    Сохранить заметку
+                </button>
+            </form>
+        </section>
 
-        <!-- Карточка водителя -->
-        <div class="driver-card">
+        <section class="info-block license-block">
+            <h3>🪪 Водительское удостоверение</h3>
+            <p>{{ driver.formatted_license }}</p>
+        </section>
 
-            <!-- Верхний блок: Фото и Имя -->
-            <div class="driver-header">
-
-                <!-- Аватарка -->
-                <div class="avatar-container">
-                    <div class="avatar-circle">
-                        {% if driver.avatar %}
-                        <img src="{{ driver.avatar.url }}" alt="Аватар">
-                        {% else %}
-                        <span class="avatar-placeholder">👨‍✈️</span>
-                        {% endif %}
-                    </div>
-
-                    <form method="POST" enctype="multipart/form-data" class="avatar-form" style="margin: 0;">
-                        {% csrf_token %}
-                        <input type="file" name="avatar" id="avatar_input" onchange="this.form.submit()">
-                        <label for="avatar_input">Изменить фото</label>
-                        <button type="submit" name="submit_avatar" style="display: none;"></button>
-                    </form>
-                </div>
-
-                <!-- Имя и Телефон (ВОТ ЭТОТ БЛОК ДОЛЖЕН БЫТЬ ТОЛЬКО ОДИН РАЗ) -->
-                <div class="driver-title">
-                    <h2>{{ driver.name }}</h2>
-                    <p>📞 {{ driver.phone.as_national }}</p>
-                </div>
-            </div>
-
-            <!-- Блок заметок (Отдельная форма) -->
-            <div class="info-block notes-block">
-                <h3>📝 Заметки</h3>
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ notes_form.notes }}
-                    <button type="submit" name="submit_notes" class="btn-save-notes">Сохранить заметку</button>
-                </form>
-            </div>
-
-            <!-- Блок с правами -->
-            <div class="info-block license-block">
-                <h3>🪪 Водительское удостоверение</h3>
-                <p>{{ driver.formatted_license }}</p>
-            </div>
-
-            <!-- Блок с прикрепленной машиной -->
-            {% with truck=driver.truck_set.first %}
+        {% with truck=driver.truck_set.first %}
             {% if truck %}
-            <div class="info-block">
+            <section class="info-block">
                 <h3>🚚 Закрепленная машина</h3>
                 <p><b>{{ truck.brand }}</b> ({{ truck.plate_number }})</p>
-                <p style="font-size: 14px; color: #777;">Пробег: {{ truck.mileage }} км</p>
-            </div>
+                <p class="secondary-text">Пробег: {{ truck.mileage }} км</p>
+            </section>
             {% else %}
-            <div class="info-block no-truck">
+            <section class="info-block no-truck">
                 <h3>🚚 Закрепленная машина</h3>
-                <p style="color: #777;">Водитель пока не назначен на машину.</p>
-            </div>
+                <p class="secondary-text">Водитель пока не назначен на машину.</p>
+            </section>
             {% endif %}
-            {% endwith %}
-
-        </div>
-
-    </div>
-</body>
-
-</html>
+        {% endwith %}
+    </section>
+</main>
+{% endblock %}

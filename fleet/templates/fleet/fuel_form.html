@@ -1,109 +1,50 @@
 {% extends 'fleet/base.html' %}
+{% load static %}
 
 {% block title %}Добавить заправку | Логистрим{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'fleet/css/forms.css' %}">
+{% endblock %}
 
 {% block content %}
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-    /* Стили для этой конкретной страницы (чтобы форма была красивой) */
-    .form-container {
-        background: #1e1e1e;
-        width: 50%;
-        margin: 50px auto;
-        padding: 30px;
-        border-radius: 10px;
-        border: 1px solid #333;
-        color: white;
-        font-family: 'Manrope', 'Segoe UI', Arial, sans-serif;
-    }
-
-    .form-group {
-        margin-bottom: 15px;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 5px;
-        color: #aaa;
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 10px;
-        background: #2d2d2d;
-        border: 1px solid #444;
-        color: white;
-        border-radius: 5px;
-    }
-
-    button {
-        padding: 12px;
-        background: #e74c3c;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        width: 100%;
-        font-weight: bold;
-    }
-
-    .back-btn {
-        display: block;
-        text-align: center;
-        margin-top: 20px;
-        color: #007bff;
-        text-decoration: none;
-        font-weight: bold;
-    }
-
-    .back-btn:hover {
-        text-decoration: underline;
-    }
-</style>
-
-<div class="form-container">
+<main class="form-container">
     <h1>Новая заправка</h1>
 
-    <div id="form-messages" style="margin-bottom: 15px; font-weight: bold;"></div>
+    {% if form.non_field_errors %}
+    <div class="error-box">
+        {% for error in form.non_field_errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
 
-    <!-- Обрати внимание: тут нет тегов head, body и скриптов! Они в base.html -->
     <form method="POST">
         {% csrf_token %}
-        {% if form.non_field_errors %}
-        <div
-            style="background: #331111; color: #ff4444; padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px solid #551111;">
-            {% for error in form.non_field_errors %}
-            <p style="margin: 0;">{{ error }}</p>
-            {% endfor %}
-        </div>
-        {% endif %}
+
         <div class="form-group">
             <label>Машина:</label>
-            🚚 {{ truck.brand }} ({{ truck.plate_number }})
+            <div class="truck-info">🚚 {{ truck.brand }} ({{ truck.plate_number }})</div>
         </div>
+
         <div class="form-group">
-            <label>Литры:</label>
+            <label for="{{ form.liters.id_for_label }}">Литры:</label>
             {{ form.liters }}
             {% if form.liters.errors %}
-            <div style="color: #ff4444; font-size: 14px; margin-top: 5px;">
-                {{ form.liters.errors.0 }}
-            </div>
+            <div class="field-error">{{ form.liters.errors.0 }}</div>
             {% endif %}
         </div>
+
         <div class="form-group">
-            <label>Стоимость (руб):</label>
+            <label for="{{ form.price.id_for_label }}">Стоимость (руб):</label>
             {{ form.price }}
             {% if form.price.errors %}
-            <div style="color: #ff4444; font-size: 14px; margin-top: 5px;">
-                {{ form.price.errors.0 }}
-            </div>
+            <div class="field-error">{{ form.price.errors.0 }}</div>
             {% endif %}
         </div>
-        <button type="submit">Сохранить заправку</button>
+
+        <button type="submit" class="btn-primary">Сохранить заправку</button>
     </form>
+
     <a href="{% url 'dashboard' %}" class="back-btn">← Вернуться в автопарк</a>
-</div>
+</main>
 {% endblock %}

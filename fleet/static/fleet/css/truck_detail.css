@@ -1,0 +1,212 @@
+/* Страница карточки автомобиля */
+.truck-detail-container {
+    max-width: 1000px;
+}
+
+.header-card,
+.details-block {
+    padding: 25px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    background: var(--color-surface);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .3);
+}
+
+.header-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 30px;
+    margin-bottom: 25px;
+}
+
+.header-card h1 {
+    margin: 0;
+    color: var(--color-white);
+    font-size: 32px;
+}
+
+.mileage-info {
+    margin-top: 10px;
+    color: var(--color-muted);
+    font-size: 16px;
+}
+
+.right-info {
+    text-align: right;
+}
+
+.plate {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 5px;
+    background: rgba(0, 123, 255, .1);
+    color: var(--color-primary);
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.status {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.status-free {
+    color: var(--color-success);
+}
+
+.status-busy {
+    color: var(--color-warning);
+}
+
+.driver-info {
+    margin-top: 5px;
+    color: var(--color-muted);
+    font-size: 14px;
+}
+
+.driver-link {
+    color: var(--color-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.driver-link:hover {
+    text-decoration: underline;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.details-block {
+    min-width: 0;
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 12px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--color-border);
+}
+
+.details-block h2 {
+    margin: 0;
+    color: var(--color-white);
+    font-size: 20px;
+}
+
+.btn-add-document,
+.btn-add-fuel {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-add-document {
+    background: #28a745;
+}
+
+.btn-add-document:hover {
+    background: #218838;
+}
+
+.btn-add-fuel {
+    background: var(--color-danger);
+}
+
+.btn-add-fuel:hover {
+    background: #c0392b;
+}
+
+.item-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.item-list li {
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--color-border-light);
+}
+
+.item-list li:last-child {
+    border-bottom: 0;
+}
+
+.doc-link {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--color-success);
+    font-weight: 700;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+.doc-link:hover {
+    text-decoration: underline;
+}
+
+.doc-date,
+.fuel-date {
+    color: var(--color-subtle);
+    font-size: 12px;
+}
+
+.fuel-info {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+.fuel-liters {
+    color: var(--color-white);
+    font-weight: 700;
+}
+
+.fuel-price,
+.total-sum-value {
+    color: var(--color-danger);
+    font-weight: 700;
+}
+
+.total-sum {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 15px;
+    margin-top: 10px;
+    border-top: 1px solid var(--color-border);
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .header-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .right-info {
+        width: 100%;
+        text-align: left;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+}

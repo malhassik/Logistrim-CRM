@@ -1,0 +1,120 @@
+/* Главная страница автопарка */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 80px);
+}
+
+.trucks-grid,
+.drivers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.truck-card,
+.driver-card {
+    display: block;
+    padding: 25px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    background: var(--color-surface);
+    color: var(--color-text);
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .3);
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.truck-card:hover,
+.driver-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-primary);
+    box-shadow: 0 8px 20px rgba(0, 123, 255, .18);
+}
+
+.truck-icon,
+.driver-icon {
+    margin-bottom: 15px;
+    font-size: 40px;
+}
+
+.truck-card h2,
+.driver-card h3 {
+    margin: 0 0 5px;
+    color: var(--color-white);
+}
+
+.truck-card h2 {
+    font-size: 24px;
+}
+
+.driver-card h3 {
+    font-size: 22px;
+}
+
+.plate {
+    margin: 0 0 15px;
+    color: var(--color-primary);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.status-free {
+    background: rgba(46, 204, 113, .2);
+    color: var(--color-success);
+}
+
+.status-busy {
+    background: rgba(241, 196, 15, .2);
+    color: var(--color-warning);
+}
+
+.driver-info {
+    margin-top: 10px;
+    color: var(--color-muted);
+    font-size: 14px;
+}
+
+.drivers-section {
+    margin-top: 50px;
+}
+
+.section-title {
+    margin: 0 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--color-border);
+    color: var(--color-white);
+}
+
+.driver-card {
+    padding: 20px;
+    border-left: 5px solid #17a2b8;
+}
+
+.driver-card .phone {
+    margin: 0 0 15px;
+    color: var(--color-muted);
+    font-size: 15px;
+}
+
+.assigned-truck {
+    padding: 10px;
+    border-left: 3px solid var(--color-success);
+    border-radius: 5px;
+    background: var(--color-input);
+    color: var(--color-text);
+    font-size: 14px;
+}
+
+.assigned-truck-empty {
+    border-left-color: #555;
+    color: var(--color-subtle);
+}

@@ -1,0 +1,176 @@
+/* Страница водителя */
+.driver-detail-container {
+    max-width: 800px;
+}
+
+.brand-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.brand-link:hover {
+    color: var(--color-primary);
+}
+
+.driver-card {
+    padding: 30px;
+    border: 1px solid var(--color-border);
+    border-top: 5px solid #17a2b8;
+    border-radius: 10px;
+    background: var(--color-surface);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .3);
+}
+
+.driver-header {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.avatar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar-circle {
+    display: flex;
+    width: 120px;
+    height: 120px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 3px solid #17a2b8;
+    border-radius: 50%;
+    background: var(--color-input);
+}
+
+.avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    font-size: 60px;
+}
+
+.avatar-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.avatar-form input[type="file"] {
+    max-width: 190px;
+    color: var(--color-muted);
+    font-size: 12px;
+}
+
+.avatar-form label {
+    color: var(--color-primary);
+    font-size: 14px;
+    text-decoration: underline;
+}
+
+.avatar-form label:hover {
+    color: #4da3ff;
+}
+
+.avatar-submit-btn,
+.btn-save-notes {
+    padding: 8px 15px;
+    border: 0;
+    border-radius: 5px;
+    background: var(--color-warning);
+    color: #000;
+    font-weight: 700;
+    transition: background .2s ease;
+}
+
+.avatar-submit-btn:hover,
+.btn-save-notes:hover {
+    background: #d4ac0d;
+}
+
+.driver-title h2 {
+    margin: 0 0 5px;
+    color: var(--color-white);
+    font-size: 32px;
+}
+
+.driver-title p {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 18px;
+}
+
+.info-block {
+    padding: 20px;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--color-success);
+    border-radius: 8px;
+    background: var(--color-surface-soft);
+}
+
+.info-block h3 {
+    margin: 0 0 10px;
+    color: var(--color-white);
+    font-size: 18px;
+}
+
+.info-block p {
+    margin: 5px 0;
+    color: #ccc;
+    font-size: 16px;
+}
+
+.notes-block {
+    border-left-color: var(--color-warning);
+}
+
+.license-block {
+    border-left-color: #3498db;
+}
+
+.no-truck {
+    border-left-color: var(--color-danger);
+}
+
+.secondary-text {
+    color: var(--color-subtle) !important;
+    font-size: 14px !important;
+}
+
+.notes-block textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: 10px;
+    border: 1px solid var(--color-border-light);
+    border-radius: 6px;
+    background: var(--color-input);
+    color: var(--color-white);
+    resize: vertical;
+}
+
+.btn-save-notes {
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .driver-card {
+        padding: 20px;
+    }
+
+    .driver-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .driver-title h2 {
+        font-size: 26px;
+    }
+}
