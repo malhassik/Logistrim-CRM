@@ -67,18 +67,18 @@
         </section>
 
         {% with truck=driver.truck_set.first %}
-            {% if truck %}
-            <section class="info-block">
-                <h3>🚚 Закрепленная машина</h3>
-                <p><b>{{ truck.brand }}</b> ({{ truck.plate_number }})</p>
-                <p class="secondary-text">Пробег: {{ truck.mileage }} км</p>
-            </section>
-            {% else %}
-            <section class="info-block no-truck">
-                <h3>🚚 Закрепленная машина</h3>
-                <p class="secondary-text">Водитель пока не назначен на машину.</p>
-            </section>
-            {% endif %}
+        {% if truck %}
+        <section class="info-block">
+            <h3>🚚 Закрепленная машина</h3>
+            <p><b>{{ truck.brand }}</b> ({{ truck.plate_number }})</p>
+            <p class="secondary-text">Пробег: {{ truck.mileage }} км</p>
+        </section>
+        {% else %}
+        <section class="info-block no-truck">
+            <h3>🚚 Закрепленная машина</h3>
+            <p class="secondary-text">Водитель пока не назначен на машину.</p>
+        </section>
+        {% endif %}
         {% endwith %}
     </section>
 </main>
