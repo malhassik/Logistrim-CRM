@@ -78,11 +78,6 @@ class Truck(models.Model):
         verbose_name="Водитель",
     )
 
-    def __str__(self):
-        if self.driver is not None:
-            return f"{self.brand} — {self.plate_number} | Водитель: {self.driver.name}"
-        return f"{self.brand} — {self.plate_number} | Водитель: не наёначен"
-
     def save(self, *args, **kwargs):
         if self.driver is not None:
             self.status = "Занята"
@@ -103,7 +98,12 @@ class Truck(models.Model):
 
     @property
     def total_fuel_cost(self):
-        return self.fuelrecords_set.aggregate(total=Sum("price"))["total"] or 0
+        return self.fuelrecord_set.aggregate(total=Sum("price"))["total"] or 0
+
+    def __str__(self):
+        if self.driver is not None:
+            return f"{self.brand} — {self.plate_number} | Водитель: {self.driver.name}"
+        return f"{self.brand} — {self.plate_number} | Водитель: не наёначен"
 
 
 class FuelRecord(models.Model):
