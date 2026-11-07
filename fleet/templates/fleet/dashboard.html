@@ -10,6 +10,12 @@
 <main class="container dashboard-container">
     <header class="header">
         <h1>Наш автопарк</h1>
+
+        <nav class="main-nav">
+            <a href="{% url 'trip_log' %}">Путевые листы</a>
+            <!-- Потом добавишь сюда другие ссылки -->
+        </nav>
+
         <div class="user-info">
             <span>Привет, <b>{{ user.username }}</b>!</span>
             <form action="{% url 'logout' %}" method="POST" class="logout-form">
@@ -56,15 +62,15 @@
                 <p class="phone">📞 {{ driver.phone.as_national }}</p>
 
                 {% with truck=driver.truck_set.first %}
-                    {% if truck %}
-                    <div class="assigned-truck">
-                        🚚 Машина: {{ truck.brand }} ({{ truck.plate_number }})
-                    </div>
-                    {% else %}
-                    <div class="assigned-truck assigned-truck-empty">
-                        🚚 Без машины
-                    </div>
-                    {% endif %}
+                {% if truck %}
+                <div class="assigned-truck">
+                    🚚 Машина: {{ truck.brand }} ({{ truck.plate_number }})
+                </div>
+                {% else %}
+                <div class="assigned-truck assigned-truck-empty">
+                    🚚 Без машины
+                </div>
+                {% endif %}
                 {% endwith %}
             </a>
             {% empty %}
@@ -72,5 +78,7 @@
             {% endfor %}
         </div>
     </section>
+
+
 </main>
 {% endblock %}

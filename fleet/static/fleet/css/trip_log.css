@@ -1,0 +1,249 @@
+/* Страница путевых листов */
+
+.trip-log-page {
+    max-width: 1200px;
+}
+
+.trip-log-page .page-header {
+    margin-bottom: 28px;
+}
+
+.trip-log-page .page-title {
+    margin: 0;
+    color: var(--color-white);
+    font-size: clamp(26px, 4vw, 34px);
+    font-weight: 700;
+}
+
+.trip-log-page .page-description {
+    margin: 6px 0 0;
+    color: var(--color-muted);
+    font-size: 14px;
+}
+
+.trip-card {
+    padding: 26px;
+    margin-bottom: 24px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    background: var(--color-surface);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .25);
+}
+
+.trip-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.trip-card-header h2 {
+    margin: 0;
+    color: var(--color-white);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.trip-card-header p {
+    margin: 5px 0 0;
+    color: var(--color-muted);
+    font-size: 13px;
+}
+
+.trip-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 20px;
+}
+
+.trip-form-group {
+    min-width: 0;
+}
+
+.trip-form-group label {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--color-muted);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.trip-form-group input,
+.trip-form-group textarea,
+.trip-form-group select {
+    display: block;
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border-light);
+    border-radius: 6px;
+    outline: none;
+    background: var(--color-input);
+    color: var(--color-white);
+    font: inherit;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.trip-form-group input:focus,
+.trip-form-group textarea:focus,
+.trip-form-group select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, .15);
+}
+
+.trip-form-actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 22px;
+}
+
+.trip-form-actions .btn-primary {
+    width: auto;
+    min-width: 180px;
+    margin-top: 0;
+}
+
+.trip-count {
+    flex-shrink: 0;
+    padding: 5px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    background: var(--color-surface-soft);
+    color: var(--color-muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.trip-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.trip-log-table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+.trip-log-table th,
+.trip-log-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--color-border);
+    text-align: left;
+}
+
+.trip-log-table th {
+    background: var(--color-surface-soft);
+    color: var(--color-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+}
+
+.trip-log-table th:first-child {
+    border-radius: 6px 0 0 6px;
+}
+
+.trip-log-table th:last-child {
+    border-radius: 0 6px 6px 0;
+}
+
+.trip-log-table td {
+    color: var(--color-text);
+    font-size: 14px;
+}
+
+.trip-log-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.trip-log-table tbody tr:hover {
+    background: rgba(255, 255, 255, .025);
+}
+
+.trip-log-table .trip-date {
+    color: var(--color-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.trip-log-table .trip-route {
+    min-width: 180px;
+    color: var(--color-white);
+    font-weight: 700;
+    white-space: normal;
+}
+
+.trip-weight {
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+}
+
+.trip-weight-separator {
+    padding: 0 5px;
+    color: var(--color-subtle);
+}
+
+.trip-empty-state {
+    display: flex;
+    min-height: 190px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    border: 1px dashed var(--color-border-light);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.trip-empty-icon {
+    margin-bottom: 10px;
+    font-size: 30px;
+}
+
+.trip-empty-state p {
+    margin: 0;
+    color: var(--color-text);
+    font-weight: 700;
+}
+
+.trip-empty-state span:last-child {
+    margin-top: 5px;
+    color: var(--color-subtle);
+    font-size: 13px;
+}
+
+@media (max-width: 768px) {
+    .trip-card {
+        padding: 20px;
+    }
+
+    .trip-form-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .trip-card-header {
+        flex-direction: column;
+    }
+
+    .trip-form-actions .btn-primary {
+        width: 100%;
+    }
+
+    .trip-log-table th,
+    .trip-log-table td {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .trip-card {
+        padding: 16px;
+    }
+
+    .trip-log-page .page-title {
+        font-size: 25px;
+    }
+}

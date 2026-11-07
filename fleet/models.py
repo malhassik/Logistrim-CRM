@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from phonenumber_field.modelfields import PhoneNumberField
 from django.core.validators import RegexValidator
+from django.db.models import Sum
 
 
 class Driver(models.Model):
@@ -92,6 +93,18 @@ class Truck(models.Model):
 
         super().save(*args, **kwargs)
 
+    @property
+    def documents(self):
+        return self.document_set.all()
+
+    @property
+    def fuel_records(self):
+        return self.fuelrecord_set.all().order_by("-date")
+
+    @property
+    def total_fuel_cost(self):
+        return self.fuelrecords_set.aggregate(total=Sum("price"))["total"] or 0
+
 
 class FuelRecord(models.Model):
     truck = models.ForeignKey(
@@ -121,10 +134,49 @@ class FuelRecord(models.Model):
 
 
 class Document(models.Model):
-    title = models.CharField(max_length=100, verbose_name="Название (НТ, Чек)")
-    file = models.FileField(upload_to="documents/", verbose_name="Файл")
-    truck = models.ForeignKey(Truck, on_delete=models.CASCADE, verbose_name="Машина")
-    uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата загрузки")
+    title = models.CharField(
+        max_length=100,
+        verbose_name="Название (НТ, Чек)",
+    )
+    file = models.FileField(
+        upload_to="documents/",
+        verbose_name="Файл",
+    )
+    truck = models.ForeignKey(
+        Truck,
+        on_delete=models.CASCADE,
+        verbose_name="Машина",
+    )
+    uploaded_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Дата загрузки",
+    )
 
     def __str__(self):
         return f"{self.title} - {self.truck.plate_number}"
+
+
+class TripLog(models.Model):
+    date = models.DateField(
+        verbose_name="Дата рейса",
+    )
+    route = models.CharField(
+        max_length=50,
+        verbose_name="Маршрут",
+    )
+    distance = models.IntegerField(
+        verbose_name="Расстояние",
+        validators=[MinValueValidator(0)],
+    )
+    mileage = models.IntegerField(
+        verbose_name="Пробег (км)",
+        validators=[MinValueValidator(0)],
+    )
+    loading_weight_kg = models.IntegerField(
+        verbose_name="Вес загрузки",
+        validators=[MinValueValidator(0)],
+    )
+    unloading_weight_kg = models.IntegerField(
+        verbose_name="Вес выгрузки",
+        validators=[MinValueValidator(0)],
+    )

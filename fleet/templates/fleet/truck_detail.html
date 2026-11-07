@@ -9,7 +9,7 @@
 
 {% block content %}
 <main class="container truck-detail-container">
-    <a href="{% url 'dashboard' %}" class="back-btn">← Назад к автопарку</a>
+    <a href="{% url 'dashboard' %}" class="back-btn">← На главную</a>
 
     <section class="header-card">
         <div>
@@ -45,7 +45,7 @@
             </div>
 
             <ul class="item-list">
-                {% for doc in documents %}
+                {% for doc in truck.documents %}
                 <li>
                     <a href="{{ doc.file.url }}" target="_blank" rel="noopener noreferrer" class="doc-link">
                         📎 {{ doc.title }}
@@ -67,7 +67,7 @@
             </div>
 
             <ul class="item-list">
-                {% for record in fuel_records %}
+                {% for record in truck.fuel_records %}
                 <li>
                     <div class="fuel-info">
                         <span class="fuel-liters">{{ record.liters }} л.</span>
@@ -80,10 +80,10 @@
                 {% endfor %}
             </ul>
 
-            {% if fuel_records %}
+            {% if truck.fuel_records %}
             <div class="total-sum">
                 <span>Итого потрачено:</span>
-                <span class="total-sum-value">{{ total_cost|floatformat:2|intcomma }} ₽</span>
+                <span class="total-sum-value">{{ truck.total_fuel_cost|floatformat:2|intcomma }} ₽</span>
             </div>
             {% endif %}
         </section>

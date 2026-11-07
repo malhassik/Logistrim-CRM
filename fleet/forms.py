@@ -1,5 +1,5 @@
 from django import forms
-from .models import Document, FuelRecord, Truck, Driver
+from .models import Document, FuelRecord, Driver, TripLog
 
 
 class DocumentForm(forms.ModelForm):
@@ -19,7 +19,11 @@ class DocumentForm(forms.ModelForm):
 class FuelRecordForm(forms.ModelForm):
     class Meta:
         model = FuelRecord
-        fields = ["truck", "liters", "price"]
+        fields = [
+            "truck",
+            "liters",
+            "price",
+        ]
 
         widgets = {
             "truck": forms.Select(attrs={"class": "form-control"}),
@@ -60,3 +64,16 @@ class DriverAvatarForm(forms.ModelForm):
     class Meta:
         model = Driver
         fields = ["avatar"]
+
+
+class TripLogForm(forms.ModelForm):
+    class Meta:
+        model = TripLog
+        fields = [
+            "date",
+            "route",
+            "distance",
+            "mileage",
+            "loading_weight_kg",
+            "unloading_weight_kg",
+        ]

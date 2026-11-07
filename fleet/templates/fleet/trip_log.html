@@ -1,0 +1,143 @@
+{% extends 'fleet/base.html' %}
+{% load static %}
+
+{% block title %}Путевые листы | Логистрим{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'fleet/css/trip_log.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="container trip-log-page">
+    <a href="{% url 'dashboard' %}" class="back-btn">← Назад к автопарку</a>
+
+    <header class="page-header">
+        <h1 class="page-title">Путевые листы</h1>
+        <p class="page-description">Добавление рейсов и история поездок автопарка</p>
+    </header>
+
+    <section class="trip-card trip-form-card">
+        <div class="trip-card-header">
+            <div>
+                <h2>Добавить новый рейс</h2>
+                <p>Заполните данные о выполненном рейсе</p>
+            </div>
+        </div>
+
+        {% if form.non_field_errors %}
+        <div class="error-box">
+            {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="trip-form-grid">
+                <div class="trip-form-group">
+                    <label for="{{ form.date.id_for_label }}">Дата рейса</label>
+                    {{ form.date }}
+                    {% if form.date.errors %}
+                    <div class="field-error">{{ form.date.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="trip-form-group">
+                    <label for="{{ form.route.id_for_label }}">Маршрут</label>
+                    {{ form.route }}
+                    {% if form.route.errors %}
+                    <div class="field-error">{{ form.route.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="trip-form-group">
+                    <label for="{{ form.distance.id_for_label }}">Расстояние, км</label>
+                    {{ form.distance }}
+                    {% if form.distance.errors %}
+                    <div class="field-error">{{ form.distance.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="trip-form-group">
+                    <label for="{{ form.mileage.id_for_label }}">Пробег, км</label>
+                    {{ form.mileage }}
+                    {% if form.mileage.errors %}
+                    <div class="field-error">{{ form.mileage.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="trip-form-group">
+                    <label for="{{ form.loading_weight_kg.id_for_label }}">Вес загрузки, кг</label>
+                    {{ form.loading_weight_kg }}
+                    {% if form.loading_weight_kg.errors %}
+                    <div class="field-error">{{ form.loading_weight_kg.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="trip-form-group">
+                    <label for="{{ form.unloading_weight_kg.id_for_label }}">Вес выгрузки, кг</label>
+                    {{ form.unloading_weight_kg }}
+                    {% if form.unloading_weight_kg.errors %}
+                    <div class="field-error">{{ form.unloading_weight_kg.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="trip-form-actions">
+                <button type="submit" class="btn-primary">Сохранить рейс</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="trip-card trip-history-card">
+        <div class="trip-card-header">
+            <div>
+                <h2>История рейсов</h2>
+                <p>Список ранее добавленных путевых листов</p>
+            </div>
+            {% if logs %}
+            <span class="trip-count">{{ logs|length }} рейс(ов)</span>
+            {% endif %}
+        </div>
+
+        {% if logs %}
+        <div class="trip-table-wrapper">
+            <table class="trip-log-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Дата</th>
+                        <th scope="col">Маршрут</th>
+                        <th scope="col">Расстояние</th>
+                        <th scope="col">Пробег</th>
+                        <th scope="col">Загрузка / выгрузка</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td class="trip-date">{{ log.date|date:"d.m.Y" }}</td>
+                        <td class="trip-route">{{ log.route }}</td>
+                        <td>{{ log.distance }} км</td>
+                        <td>{{ log.mileage }} км</td>
+                        <td>
+                            <span class="trip-weight">{{ log.loading_weight_kg }} кг</span>
+                            <span class="trip-weight-separator">/</span>
+                            <span class="trip-weight">{{ log.unloading_weight_kg }} кг</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="trip-empty-state">
+            <span class="trip-empty-icon">📋</span>
+            <p>Пока нет добавленных путевых листов.</p>
+            <span>Добавьте первый рейс с помощью формы выше.</span>
+        </div>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}

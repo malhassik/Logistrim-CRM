@@ -9,6 +9,7 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     path("", views.dashboard, name="dashboard"),
     path("truck/<int:truck_id>/", views.truck_detail, name="truck_detail"),
+    path("triplog/", views.trip_log, name="trip_log"),
     path("driver/<int:driver_id>/", views.driver_detail, name="driver_detail"),
     path(
         "upload/<int:truck_id>/",

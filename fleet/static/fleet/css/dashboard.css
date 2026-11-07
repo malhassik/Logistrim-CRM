@@ -118,3 +118,20 @@
     border-left-color: #555;
     color: var(--color-subtle);
 }
+
+.main-nav {
+    display: flex;
+    gap: 20px;
+    /* Расстояние между ссылками */
+}
+
+.main-nav a {
+    color: #aaa;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.main-nav a:hover {
+    color: #fff;
+}

@@ -1,8 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Truck, Document, Driver
-from .forms import DocumentForm, FuelRecordForm, DriverNotesForm, DriverAvatarForm
-from django.db.models import Sum
+from .models import Truck, Document, Driver, TripLog
+from .forms import (
+    DocumentForm,
+    FuelRecordForm,
+    DriverNotesForm,
+    DriverAvatarForm,
+    TripLogForm,
+)
 from rest_framework.decorators import api_view
 from .serializers import TruckSerializer
 from rest_framework import generics, permissions
@@ -38,24 +43,32 @@ def dashboard(request):
 
 
 @login_required
+def trip_log(request):
+
+    if request.method == "POST":
+        form = TripLogForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("trip_log")
+    else:
+        form = TripLogForm()
+
+    logs = TripLog.objects.all().order_by("-date")
+
+    context = {
+        "form": form,
+        "logs": logs,
+    }
+
+    return render(request, "fleet/trip_log.html", context)
+
+
+@login_required
 def truck_detail(request, truck_id):
     truck = get_object_or_404(Truck, id=truck_id)
 
-    # Блок документов
-    documents = truck.document_set.all()
-
-    # Блок заправки
-    fuel_records = truck.fuelrecord_set.all().order_by("-date")
-    total_cost = fuel_records.aggregate(total=Sum("price"))["total"]
-
-    if total_cost is None:
-        total_cost = 0
-
     context = {
         "truck": truck,
-        "documents": documents,
-        "fuel_records": fuel_records,
-        "total_cost": total_cost,
     }
 
     return render(request, "fleet/truck_detail.html", context)
