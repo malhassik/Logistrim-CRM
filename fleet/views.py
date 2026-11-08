@@ -31,7 +31,7 @@ def is_accountant(user):
 
 @login_required
 def dashboard(request):
-    trucks = Truck.objects.all()
+    trucks = Truck.objects.select_related("driver")
     drivers = Driver.objects.all()
 
     context = {
