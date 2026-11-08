@@ -3,7 +3,6 @@ from django.core.validators import MinValueValidator
 from phonenumber_field.modelfields import PhoneNumberField
 from django.core.validators import RegexValidator
 from django.db.models import Sum
-from django.shortcuts import redirect
 
 
 class Driver(models.Model):
