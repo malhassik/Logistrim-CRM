@@ -33,11 +33,6 @@ urlpatterns = [
         views.add_fuel_records,
         name="add_fuel_record_for_truck",
     ),
-    path(
-        "api/trucks/<int:pk>/",
-        views.TruckDetailAPIView.as_view(),
-        name="api_truck_detail",
-    ),
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]
